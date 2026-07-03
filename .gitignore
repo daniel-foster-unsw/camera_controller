@@ -1,0 +1,17 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+
+# VS Code
+.vscode/
+
+# Generated files
+images/
+logs/
+
+# Test cache
+.pytest_cache/
+
+# Windows
+Thumbs.db

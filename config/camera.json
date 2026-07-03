@@ -1,0 +1,21 @@
+{
+    "camera": {
+        "width": 4056,
+        "height": 3040,
+        "format": "JPEG",
+        "quality": 95,
+        "auto_white_balance": true,
+        "auto_exposure": true,
+        "analogue_gain": 1.0,
+        "exposure_time": 10000
+    },
+
+    "storage": {
+        "directory": "../images"
+    },
+
+    "logging": {
+        "directory": "../logs",
+        "level": "INFO"
+    }
+}
