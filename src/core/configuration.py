@@ -16,7 +16,7 @@ class Configuration:
     def __init__(self):
         self.loaded = False
         self.settings = {}
-        self.project_root = Path(__file__).resolve().parent.parent
+        self.project_root = Path(__file__).resolve().parent.parent.parent
 #        self.config_file = (Path(__file__).parent.parent / "config"/"camera.json")
 
         self.config_file = (
@@ -58,7 +58,11 @@ class Configuration:
         """
         value = self.settings
         for key in keys:
-            value = value.get[key]
+            if not isinstance(value, dict):
+                return None
+            value = value.get(key)
+            if value is None:
+                return None
         return value
     
     

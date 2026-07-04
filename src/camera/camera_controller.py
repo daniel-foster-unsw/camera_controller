@@ -5,10 +5,11 @@ from pathlib import Path
 from camera.mock_camera import MockCamera
 
 class CameraController:
-    def __init__(self):
-        self.camera = MockCamera()
+    def __init__(self, configuration):
+        self.camera = None
 
-    def initialise(self):
+    def initialise(self, configuration):
+        self.camera = MockCamera(configuration)
         self.camera.initialise()
 
     def capture(self, filename: Path):

@@ -24,7 +24,7 @@ from core.constants import (
 class StorageManager:
     def __init__(self, scan):
         self.scan = scan
-        self.project_root = Path(__file__).resolve().parent.parent
+        self.project_root = Path(__file__).resolve().parents[2]
         self.image_directory =( self.project_root / IMAGE_FOLDER)
         # Image number within this scan
         #self.image_number = 0
@@ -62,7 +62,7 @@ class StorageManager:
         #self.image_number += 1
         image_number = self.scan.next_image_number()
         filename = (
-            f"{self.scan.timestamp}"
+            f"{self.scan.timestamp}_"
             f"{CAMERA_ID}_"
             f"{image_number:06d}"
             f"{IMAGE_EXTENSION}"

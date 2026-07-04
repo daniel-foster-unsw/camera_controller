@@ -22,14 +22,29 @@ class Application:
         #self.storage = StorageManager()
         self.scan = Scan()
         self.storage = StorageManager(self.scan)
-        self.camera = CameraController()
+        self.camera = CameraController(self.configuration)
 
     def startup(self):
         
-
+        
         print("Loading configuration...")
         try:
             self.configuration.load()
+
+            print("\nLoaded Settings:")
+            print(self.configuration.settings)
+
+            print("\nCamera Section:")
+            print(self.configuration.get("camera"))
+
+            print("\nCamera Width:")
+            print(self.configuration.get("camera", "width"))
+
+
+
+
+
+
         except Exception as e:
             print(f"Error loading configuration: {e}")
             raise
@@ -40,15 +55,18 @@ class Application:
         print("Checking storage...")
         self.storage.initialise()
 
-        self.camera.initialise()
-        filename = self.storage.get_image_path()
+        self.camera.initialise(self.configuration)
+        #filename = self.storage.get_image_path()
 
-        self.camera.capture(filename)
+        #self.camera.capture(filename)
 
-        print(f"Captured: {filename}")
+        #print(f"Captured: {filename}")
 
 
         print("\nCamera Controller Ready\n")
+
+        
+
 
     def run(self):
 
@@ -57,3 +75,13 @@ class Application:
     def shutdown(self):
 
         print("Shutting down...")
+
+
+
+    def capture_test_image(self):
+
+        filename = self.storage.get_image_path()
+
+        self.camera.capture(filename)
+
+        print(f"Captured: {filename}")
