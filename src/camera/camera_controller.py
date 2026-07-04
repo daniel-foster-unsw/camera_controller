@@ -2,7 +2,7 @@
 camera_controller.py
 """
 from pathlib import Path
-from mock_camera import MockCamera
+from camera.mock_camera import MockCamera
 
 class CameraController:
     def __init__(self):

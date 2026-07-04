@@ -5,11 +5,11 @@ Main application controller for the Core Scanner Camera Controller.
 
 from fileinput import filename
 
-from logger_manager import LoggerManager
-from configuration import Configuration
-from storage_manager import StorageManager
-from camera_controller import CameraController
-from scan import Scan
+from core.logger_manager import LoggerManager
+from core.configuration import Configuration
+from core.storage_manager import StorageManager
+from camera.camera_controller import CameraController
+from core.scan import Scan
 
 class Application:
     """

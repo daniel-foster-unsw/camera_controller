@@ -6,11 +6,11 @@ Handles image storage and file management.
 
 from pathlib import Path
 from datetime import datetime
-from constants import (IMAGE_FOLDER, CAMERA_ID, IMAGE_EXTENSION)
+from core.constants import (IMAGE_FOLDER, CAMERA_ID, IMAGE_EXTENSION)
 import shutil
-from scan import Scan
+from core.scan import Scan
 
-from constants import (
+from core.constants import (
     IMAGE_FOLDER,
     CAMERA_ID,
     IMAGE_EXTENSION

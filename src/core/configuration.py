@@ -7,7 +7,7 @@ Loads and provides access to the Camera Controller configuration.
 import json
 from pathlib import Path
 
-from constants import CONFIG_FOLDER, CONFIG_FILE
+from core.constants import CONFIG_FOLDER, CONFIG_FILE
 
 class Configuration:
     """

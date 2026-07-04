@@ -3,7 +3,7 @@ main.py
 
 Program entry point.
 """
-from application import Application
+from core.application import Application
 
 def main():
     app = Application()
