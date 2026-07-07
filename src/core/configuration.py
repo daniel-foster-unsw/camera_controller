@@ -4,6 +4,7 @@ configuration.py
 
 Loads and provides access to the Camera Controller configuration.
 """
+from asyncio.log import logger
 import json
 from pathlib import Path
 
@@ -14,6 +15,10 @@ class Configuration:
     Manages the configuration settings for the Camera Controller application.
     """
     def __init__(self):
+        
+
+
+
         self.loaded = False
         self.settings = {}
         self.project_root = Path(__file__).resolve().parent.parent.parent
@@ -29,6 +34,8 @@ class Configuration:
         """
         Loads configuration settings from a file or environment variables.
         """
+
+
         try:
             with open(self.config_file, 'r', encoding="utf-8") as file:
                 self.settings = json.load(file)

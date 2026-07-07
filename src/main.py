@@ -4,6 +4,7 @@ main.py
 Program entry point.
 """
 from core.application import Application
+from ui.console_menu import ConsoleMenu
 
 def main():
 
@@ -11,7 +12,9 @@ def main():
     try:
         app.startup()
         
-        app.run()
+        menu = ConsoleMenu(app)
+        menu.run()
+
         app.capture_test_image()
 
     finally:
