@@ -3,14 +3,17 @@ main.py
 
 Program entry point.
 """
-from application import Application
+from core.application import Application
+from ui.console_menu import ConsoleMenu
 
 def main():
     app = Application()
     try:
         app.startup()
 
-        app.run()
+#        app.run()
+        menu = ConsoleMenu(app)
+        menu.run()
 
     finally:
 

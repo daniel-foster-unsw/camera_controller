@@ -1,17 +1,20 @@
 # Python
-.venv/
 __pycache__/
 *.py[cod]
+
+# Virtual environment
+.venv/
+
+# Logs
+logs/
+*.log
+
+# Generated images
+images/
 
 # VS Code
 .vscode/
 
-# Generated files
-images/
-logs/
-
-# Test cache
-.pytest_cache/
-
-# Windows
+# OS files
+.DS_Store
 Thumbs.db

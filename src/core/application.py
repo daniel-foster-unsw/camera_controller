@@ -1,0 +1,88 @@
+"""
+application.py 
+Main application controller for the Core Scanner Camera Controller.
+"""
+
+from fileinput import filename
+
+from core.logger_manager import LoggerManager
+from core.configuration import Configuration
+from core.storage_manager import StorageManager
+from camera.camera_controller import CameraController
+from core.scan import Scan
+
+
+class Application:
+    """
+    Coordinates the startup, execution and shutdown of the Camera Controller application.
+    """
+
+    def __init__(self):
+        self.logger = LoggerManager()
+        self.configuration = Configuration()
+        #self.storage = StorageManager()
+        self.scan = Scan()
+        self.storage = StorageManager(self.scan)
+        self.camera = CameraController()
+
+    def startup(self):
+        
+
+        print("Loading configuration...")
+        try:
+            self.configuration.load()
+        except Exception as e:
+            print(f"Error loading configuration: {e}")
+            raise
+
+        print("Starting logger...")
+        self.logger.initialise(self.configuration)
+
+        print("Checking storage...")
+        self.storage.initialise()
+
+        self.camera.initialise(self.configuration, self.logger)
+#        filename = self.storage.get_image_path()
+#        self.camera.capture(filename)
+#        print(f"Captured: {filename}")
+        print("\nCamera Controller Ready\n")
+
+    def run(self):
+
+        print("Application running...")
+
+    def shutdown(self):
+
+        print("Shutting down...")
+
+
+#Menu Class
+    def capture_test_image(self):
+        filename = self.storage.get_image_path()
+        self.camera.capture(filename)
+        print(f"Captured: {filename}")
+
+
+    def show_camera_information(self):
+        return self.camera.get_information()
+    def show_camera_status(self):
+        return self.camera.get_status()
+    def show_storage_information(self):
+        return self.storage.check_storage()
+    def show_configuration(self):
+        return self.configuration.settings
+    def run_camera_self_test(self):
+        return self.camera.self_test()
+    def get_system_header(self):
+            return {
+            "camera_state": self.camera.get_status().state.name,
+            "camera_driver": self.configuration.get("camera", "driver"),
+            "camera_id": self.camera.get_information().camera_id,
+            "storage": str(self.storage.image_directory),
+            "images_taken": self.scan.image_number,
+            "log_level": self.configuration.get("logging", "level"),
+            "log_file": str(self.logger.get_log_file()),
+        }
+           
+    def show_log_location(self):
+        return self.logger.get_log_file()

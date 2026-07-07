@@ -42,3 +42,6 @@ class CameraInterface(ABC):
             bool: True if the camera is ready, False otherwise.
         """
         pass
+
+    def self_test(self):
+        pass

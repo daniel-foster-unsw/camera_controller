@@ -4,7 +4,7 @@ scan.py
 Represents one scanning session.
 """
 from datetime import datetime
-from constants import CAMERA_ID
+from core.constants import CAMERA_ID
 
 class Scan:
     """
