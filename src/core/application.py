@@ -10,6 +10,8 @@ from core.configuration import Configuration
 from core.storage_manager import StorageManager
 from camera.camera_controller import CameraController
 from core.scan import Scan
+from communication.serial_manager import SerialManager
+from communication.command_parser import CommandParser
 
 
 class Application:
@@ -24,6 +26,8 @@ class Application:
         self.scan = Scan()
         self.storage = StorageManager(self.scan)
         self.camera = CameraController()
+        self.serial_manager = SerialManager()
+        self.command_parser = CommandParser(self, self.logger)
 
     def startup(self):
         
@@ -38,6 +42,10 @@ class Application:
         print("Starting logger...")
         self.logger.initialise(self.configuration)
 
+
+        print("Starting serial manager...")
+        self.serial_manager.initialise(self.configuration, self.logger)
+
         print("Checking storage...")
         self.storage.initialise()
 
@@ -47,30 +55,40 @@ class Application:
 #        print(f"Captured: {filename}")
         print("\nCamera Controller Ready\n")
 
+
+
+        
     def run(self):
 
         print("Application running...")
+        while True:
+            self.process_serial_command()
 
     def shutdown(self):
 
         print("Shutting down...")
 
 
-#Menu Class
+#Menu Classes
     def capture_test_image(self):
         filename = self.storage.get_image_path()
         self.camera.capture(filename)
         print(f"Captured: {filename}")
+        return filename
 
 
     def show_camera_information(self):
         return self.camera.get_information()
+    
     def show_camera_status(self):
         return self.camera.get_status()
+    
     def show_storage_information(self):
         return self.storage.check_storage()
+    
     def show_configuration(self):
         return self.configuration.settings
+    
     def run_camera_self_test(self):
         return self.camera.self_test()
     def get_system_header(self):
@@ -86,3 +104,23 @@ class Application:
            
     def show_log_location(self):
         return self.logger.get_log_file()
+    
+
+    def process_serial_command(self):
+        """
+        Process one incoming serial command.
+        """
+        try:
+            command = self.serial_manager.read()
+
+            if command is None:
+                return
+
+            response = self.command_parser.execute(command)
+
+            self.serial_manager.write(response)
+        except Exception as error:
+
+            self.logger.error(
+                f"Serial communication error: {error}"
+            )

@@ -19,5 +19,12 @@
     "logging": {
         "directory": "../logs",
         "level": "INFO"
+    },
+
+    "serial": {
+        "enabled": false,
+        "port": "COM5",
+        "baud_rate": 115200,
+        "timeout": 1
     }
 }

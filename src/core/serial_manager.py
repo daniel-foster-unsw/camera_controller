@@ -1,5 +1,4 @@
 import serial
-from .command import Command
 
 class SerialManager:
 
@@ -40,60 +39,61 @@ class SerialManager:
             "timeout"
         )
 
-        if not self.enabled:
-            self.logger.info(
-                f"Serial interface disabled (configured port: {self.port})."
-            )
-            return
-
         self.serial_port = serial.Serial(
             port=self.port,
             baudrate=self.baud_rate,
             timeout=self.timeout
+
         )
 
 
+        if not self.enabled:
+            self.logger.info(
+                "Serial interface disabled."
+            )
+            return
+        self.serial_port = serial.Serial(
+            port=self.port,
+            baudrate=self.baud_rate,
+            timeout=self.timeout
+
+        )
 
         self.connected = True
 
         self.logger.info(
-            f"Serial interface enabled on {self.port} @ {self.baud_rate} baud."
+            f"Opened serial port {self.port}"
         )
 
-    def read(self):
-        if not self.connected:
-            return None
+        def read(self):
+            if not self.connected:
+                return None
 
-        line = self.serial_port.readline()
+            line = self.serial_port.readline()
 
-        if not line:
-            return None
-            
-        json_string = line.decode("utf-8").strip()
+            if not line:
+                return None
 
-#        return line.decode("utf-8").strip()
-        try:
-            return Command.from_json(json_string)
-
-        except Exception as e:
-            self.logger.error(f"Invalid command received: {e}")
-        return None
+            return line.decode("utf-8").strip()
         
-    def write(self, response):
+        def write(self, message):
 
-        if not self.connected:
-            return
-        message = response.to_json()
-        self.serial_port.write(
-            (message + "\n").encode("utf-8")
-        )
+            if not self.connected:
+                return
+
+            self.serial_port.write(
+                (message + "\n").encode("utf-8")
+            )
 
 
-    def stop(self):
+        def stop(self):
 
-        if self.serial_port:
-            self.serial_port.close()
-        self.connected = False
-        self.logger.info(
-            "Serial connection closed."
-        )
+            if self.serial_port:
+
+                self.serial_port.close()
+
+            self.connected = False
+
+            self.logger.info(
+                "Serial connection closed."
+            )

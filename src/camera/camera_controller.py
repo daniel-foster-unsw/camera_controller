@@ -23,7 +23,7 @@ class CameraController:
         if driver == "mock":
 
             self.camera = MockCamera(configuration)
-            self.logger.error(f"Mock Camera selected")
+            self.logger.warning(f"Mock Camera selected")
 
         elif driver == "pi":
             self.camera = PiCamera(configuration)
