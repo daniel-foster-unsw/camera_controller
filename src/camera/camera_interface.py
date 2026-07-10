@@ -45,3 +45,17 @@ class CameraInterface(ABC):
 
     def self_test(self):
         pass
+
+
+    @abstractmethod
+    def get_information(self):
+        pass
+    @abstractmethod
+    def get_status(self):
+        pass
+    @abstractmethod
+    def get_state(self):
+        pass
+    @abstractmethod
+    def recover(self):
+        pass

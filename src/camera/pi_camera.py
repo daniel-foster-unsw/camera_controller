@@ -31,27 +31,38 @@ class PiCamera(CameraInterface):
         self.height = None
         self.image_format = None
 
+        self.state = CameraState.UNINITIALISED
+
     def initialise(self, configuration, logger):
 
-        self.logger = logger
-        self.configuration = configuration
+        try:
+            self.state = CameraState.INITIALISING
+            self.logger = logger
+            self.configuration = configuration
 
-        #read configuration
-        self.camera_id = configuration.get("camera", "id")
-        self.width = configuration.get("camera", "width")
-        self.height = configuration.get("camera", "height")
-        self.image_format = configuration.get("camera", "format")
+            #read configuration
+            self.camera_id = configuration.get("camera", "id")
+            self.width = configuration.get("camera", "width")
+            self.height = configuration.get("camera", "height")
+            self.image_format = configuration.get("camera", "format")
 
+            
+            from picamera2 import Picamera2
 
-        from picamera2 import Picamera2
+            self.camera = Picamera2()
+            preview_config = self.camera.create_still_configuration(main={"size":(self.width, self.height)})
 
-        self.camera = Picamera2()
-        preview_config = self.camera.create_still_configuration(main={"size":(self.width, self.height)})
+            self.camera.configure(preview_config)
+            self.camera.start()
+            self.state = CameraState.READY
 
-        self.camera.configure(preview_config)
-        self.camera.start()
-
-        self.logger.info("pi Camera initialised.")
+            self.logger.info("pi Camera initialised.")
+        except Exception as e:
+            self.state = CameraState.ERROR
+            self.logger.error(
+                f"Failed to initialise Pi Camera: {e}"
+            )
+            raise
 
 
     def capture_image(self, filename):
@@ -89,12 +100,13 @@ class PiCamera(CameraInterface):
         """
         Stop Pi Camera.
         """
-        self.logger.error("code component Stop() in pi_camera not implemented")
-        raise CameraComponentNotImplementedError("code component Stop() in pi_camera not implemented")
-#        self.ready = False
+        if self.camera is not None:
+            self.camera.stop()
         self.state = CameraState.SHUTDOWN
-        #        print("Camera stopped")
-        self.logger.info("Mock camera stopped.")
+        self.logger.info("Pi Camera stopped.")
+#        raise CameraComponentNotImplementedError("code component Stop() in pi_camera not implemented")
+
+
 
     def is_ready(self):
         """
@@ -103,13 +115,13 @@ class PiCamera(CameraInterface):
         Returns:
             bool: Always returns True for the mock camera.
         """
-        self.logger.error("code component is_ready() in pi_camera not implemented")
-        raise CameraComponentNotImplementedError("code component is_ready() in pi_camera not implemented")
+#        self.logger.error("code component is_ready() in pi_camera not implemented")
+#        raise CameraComponentNotImplementedError("code component is_ready() in pi_camera not implemented")
         return self.state == CameraState.READY
     
     def get_state(self):
-        self.logger.error("code component get_state() in pi_camera not implemented")
-        raise CameraComponentNotImplementedError("code component get_state() in pi_camera not implemented")
+ #       self.logger.error("code component get_state() in pi_camera not implemented")
+#      raise CameraComponentNotImplementedError("code component get_state() in pi_camera not implemented")
 
         return self.state
     
@@ -136,8 +148,8 @@ class PiCamera(CameraInterface):
 
     def get_status(self):
             
-        self.logger.error("code component get_status() in pi_camera not implemented")
-        raise CameraComponentNotImplementedError("code component get_status() in pi_camera not implemented")
+#        self.logger.error("code component get_status() in pi_camera not implemented")
+#        raise CameraComponentNotImplementedError("code component get_status() in pi_camera not implemented")
 
         return CameraStatus(
 
@@ -145,7 +157,7 @@ class PiCamera(CameraInterface):
 
             ready=self.state == CameraState.READY,
 
-            connected=True,
+            connected=self.camera is not None,
 
             initialised=self.state != CameraState.UNINITIALISED,
 
@@ -158,6 +170,7 @@ class PiCamera(CameraInterface):
     def self_test(self):
 
         tests = []
+        tests.append(self.camera is not None)
 
         tests.append(self.width > 0)
 
@@ -175,10 +188,16 @@ class PiCamera(CameraInterface):
         self.logger.warning(
             "Attempting camera recovery."
         )
-        self.logger.error("code component recover() in pi_camera not implemented")
-        raise CameraComponentNotImplementedError("code component recover() in pi_camera not implemented")
-        self.state = CameraState.INITIALISING
+#        self.logger.error("code component recover() in pi_camera not implemented")
+#        raise CameraComponentNotImplementedError("code component recover() in pi_camera not implemented")
+        try:
+            self.stop
+        except Exception:
+            pass
 
-        self.initialise(self.logger)
+        self.state = CameraState.INITIALISING
+        self.initialise(self.configuration,self.logger)
+        self.state = CameraState.READY
+        return self.is_ready()
 
         
