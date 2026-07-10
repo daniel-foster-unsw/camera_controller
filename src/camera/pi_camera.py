@@ -18,6 +18,10 @@ from models.camera_information import CameraInformation
 from models.camera_status import CameraStatus
 from models.capture_result import CaptureResult
 
+from picamera2 import Picamera2
+
+from time import sleep
+
 class PiCamera(CameraInterface):
 
     def __init__(self, configuration):
@@ -45,15 +49,16 @@ class PiCamera(CameraInterface):
             self.width = configuration.get("camera", "width")
             self.height = configuration.get("camera", "height")
             self.image_format = configuration.get("camera", "format")
+            self.logger.info(f"Camera resolution: {self.width} x {self.height}")
+            self.logger.info(f"Image format: {self.image_format}")
 
-            
-            from picamera2 import Picamera2
 
             self.camera = Picamera2()
-            preview_config = self.camera.create_still_configuration(main={"size":(self.width, self.height)})
+            capture_config = self.camera.create_still_configuration(main={"size":(self.width, self.height)})
 
-            self.camera.configure(preview_config)
+            self.camera.configure(capture_config)
             self.camera.start()
+            sleep(2)
             self.state = CameraState.READY
 
             self.logger.info("pi Camera initialised.")
@@ -76,6 +81,10 @@ class PiCamera(CameraInterface):
             self.logger.info(f"Capturing image: {filename.name}")
 
             # Actual pi camera capture
+            filename.parent.mkdir(
+            parents=True,
+            exist_ok=True
+            )
 
             self.camera.capture_file(str(filename))
             self.state = CameraState.READY
@@ -131,7 +140,7 @@ class PiCamera(CameraInterface):
 
             camera_id=self.camera_id,
 
-            camera_name="Pi Camera",
+            camera_name="Raspberry Pi Camera Module 3",
 
             width=self.width,
 
@@ -180,6 +189,8 @@ class PiCamera(CameraInterface):
 
         tests.append(self.image_format is not None)
 
+        tests.append(self.state == CameraState.READY)
+
         return all(tests)
     
 
@@ -191,13 +202,18 @@ class PiCamera(CameraInterface):
 #        self.logger.error("code component recover() in pi_camera not implemented")
 #        raise CameraComponentNotImplementedError("code component recover() in pi_camera not implemented")
         try:
-            self.stop
+            self.stop()
+            self.camera.close()
+            self.camera = None
+            self.state = CameraState.SHUTDOWN
+        
+
+            self.state = CameraState.INITIALISING
+            self.initialise(self.configuration,self.logger)
+            self.state = CameraState.READY
+
         except Exception:
             pass
-
-        self.state = CameraState.INITIALISING
-        self.initialise(self.configuration,self.logger)
-        self.state = CameraState.READY
         return self.is_ready()
 
         
