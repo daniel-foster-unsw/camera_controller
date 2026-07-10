@@ -58,3 +58,9 @@ class CameraController:
     def recover(self):
 
         self.camera.recover()
+
+    def self_test(self):
+        """
+        Run the camera driver's self test.
+        """
+        return self.camera.self_test()
