@@ -35,6 +35,7 @@ class Application:
         print("Loading configuration...")
         try:
             self.configuration.load()
+
         except Exception as e:
             print(f"Error loading configuration: {e}")
             raise
@@ -47,7 +48,8 @@ class Application:
         self.serial_manager.initialise(self.configuration, self.logger)
 
         print("Checking storage...")
-        self.storage.initialise()
+  
+        self.storage.initialise(self.configuration)
 
         self.camera.initialise(self.configuration, self.logger)
 #        filename = self.storage.get_image_path()

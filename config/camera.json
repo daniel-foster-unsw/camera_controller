@@ -1,6 +1,6 @@
 {
     "camera": {
-        "driver": "pi",
+        "driver": "mock",
         "id": "CAM01",
         "width": 4056,
         "height": 3040,

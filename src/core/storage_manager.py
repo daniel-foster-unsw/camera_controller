@@ -10,11 +10,6 @@ from core.constants import (IMAGE_FOLDER, CAMERA_ID, IMAGE_EXTENSION)
 import shutil
 from core.scan import Scan
 
-from core.constants import (
-    IMAGE_FOLDER,
-    CAMERA_ID,
-    IMAGE_EXTENSION
-)
 
 
 
@@ -24,8 +19,10 @@ from core.constants import (
 class StorageManager:
     def __init__(self, scan):
         self.scan = scan
-        self.project_root = Path(__file__).resolve().parent.parent
-        self.image_directory =( self.project_root / IMAGE_FOLDER)
+        self.project_root = Path(__file__).resolve().parents[1]
+        storage_directory = None
+        self.image_directory = None
+#        self.image_directory =( self.project_root / IMAGE_FOLDER)
         # Image number within this scan
         #self.image_number = 0
 
@@ -37,14 +34,17 @@ class StorageManager:
         #self.scan.folder_name = (f"{self.scan.timestamp}_{CAMERA_ID}")
         # Fuull path to this scan
         #self.scan_directory = (self.image_directory / self.scan_folder_name)
-        self.scan_directory = (
-            self.image_directory
-                / self.scan.folder_name
-            )
+        self.scan_directory = None
 
-    def initialise(self):
+    def initialise(self,configuration):
+
+        storage_directory = configuration.get("storage", "directory")
+        self.image_directory = (self.project_root / storage_directory).resolve()
+        self.scan_directory = (self.image_directory / self.scan.folder_name)
+
         self.image_directory.mkdir(parents=True, exist_ok=True)
         self.scan_directory.mkdir(parents=True, exist_ok=True)
+
         print("✓ Storage ready.")
 
     def check_storage(self):
@@ -62,7 +62,7 @@ class StorageManager:
         #self.image_number += 1
         image_number = self.scan.next_image_number()
         filename = (
-            f"{self.scan.timestamp}"
+            f"{self.scan.timestamp}_"
             f"{CAMERA_ID}_"
             f"{image_number:06d}"
             f"{IMAGE_EXTENSION}"

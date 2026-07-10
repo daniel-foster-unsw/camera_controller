@@ -50,6 +50,7 @@ class PiCamera(CameraInterface):
             self.width = configuration.get("camera", "width")
             self.height = configuration.get("camera", "height")
             self.image_format = configuration.get("camera", "format")
+            self.logger.info(f"Camera ID: {self.camera_id}")
             self.logger.info(f"Camera resolution: {self.width} x {self.height}")
             self.logger.info(f"Image format: {self.image_format}")
 
