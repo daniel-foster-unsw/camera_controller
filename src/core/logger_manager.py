@@ -25,7 +25,7 @@ class LoggerManager:
       
 
       log_directory = (
-         Path(__file__).resolve().parents[2]
+         Path(__file__).resolve().parents[1]
          / self.configuration.get("logging", "directory")
       )
 
