@@ -18,7 +18,7 @@ from models.camera_information import CameraInformation
 from models.camera_status import CameraStatus
 from models.capture_result import CaptureResult
 
-from picamera2 import Picamera2
+
 
 from time import sleep
 
@@ -38,6 +38,7 @@ class PiCamera(CameraInterface):
         self.state = CameraState.UNINITIALISED
 
     def initialise(self, configuration, logger):
+        from picamera2 import Picamera2
 
         try:
             self.state = CameraState.INITIALISING
@@ -58,7 +59,7 @@ class PiCamera(CameraInterface):
 
             self.camera.configure(capture_config)
             self.camera.start()
-            sleep(2)
+            sleep(configuration.get("camera","warmup_time"))
             self.state = CameraState.READY
 
             self.logger.info("pi Camera initialised.")
@@ -111,6 +112,8 @@ class PiCamera(CameraInterface):
         """
         if self.camera is not None:
             self.camera.stop()
+            self.camera.close()
+            self.camera = None
         self.state = CameraState.SHUTDOWN
         self.logger.info("Pi Camera stopped.")
 #        raise CameraComponentNotImplementedError("code component Stop() in pi_camera not implemented")
@@ -213,6 +216,8 @@ class PiCamera(CameraInterface):
             self.state = CameraState.READY
 
         except Exception:
+            self.logger.error(f"Camera recovery failed: {e}")
+            self.state = CameraState.ERROR
             pass
         return self.is_ready()
 

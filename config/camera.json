@@ -1,6 +1,6 @@
 {
     "camera": {
-        "driver": "mock",
+        "driver": "pi",
         "id": "CAM01",
         "width": 4056,
         "height": 3040,
@@ -9,7 +9,8 @@
         "auto_white_balance": true,
         "auto_exposure": true,
         "analogue_gain": 1.0,
-        "exposure_time": 10000
+        "exposure_time": 10000,
+        "warmup_time": 2
     },
 
     "storage": {

@@ -18,21 +18,25 @@ class CameraController:
 
         #get camera driver from camera.json
         driver = configuration.get("camera","driver")
+
+        if driver is None:
+            raise ValueError("Camera driver not specified in configuration.")
         
 
         if driver == "mock":
 
             self.camera = MockCamera(configuration)
-            self.logger.warning(f"Mock Camera selected")
+            self.logger.info(f"Mock Camera selected")
 
         elif driver == "pi":
             self.camera = PiCamera(configuration)
-            self.logger.error(f"Pi Camera selected")
+            self.logger.info(f"Pi Camera selected")
         else:
             self.logger.error(f"unknown camera driver: {driver}")
             raise ValueError(f"unknown camera driver: {driver}")
-
+        self.logger.info(f"Initialising {driver} camera driver...")
         self.camera.initialise(configuration,self.logger)
+        self.logger.info(f"{driver.capitalize()} camera driver initialised successfully.")
 
     def capture(self, filename: Path):
         return self.camera.capture_image(filename)
@@ -64,3 +68,6 @@ class CameraController:
         Run the camera driver's self test.
         """
         return self.camera.self_test()
+    
+    def get_driver(self):
+        return type(self.camera).__name__
