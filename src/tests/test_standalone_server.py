@@ -1,4 +1,5 @@
-from communication.network_server import NetworkServer
+
+from src.communication.network_server import NetworkServer
 
 server = NetworkServer()
 
