@@ -193,8 +193,9 @@ class Application:
 
                 message = self.communication.receive()
 
-                if not message:
-                    continue
+                if message == "":
+                    self.logger.info("Client disconnected.")
+                    break
 
                 self.logger.info(f"Received: {message}")
                 command = JsonProtocol.deserialize(message)
@@ -207,8 +208,10 @@ class Application:
                 self.communication.send(json_response)
                 
 
-            except Exception as error:
+            except ConnectionResetError:
+                self.logger.info("Client disconnected.")
+                break
 
-                self.logger.error(
-                f"Communication error: {error}"
-            )
+            except Exception as error:
+                self.logger.error(error)
+                break
