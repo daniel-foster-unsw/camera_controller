@@ -82,7 +82,25 @@ class NetworkServer(CommunicationInterface):
         return self.reader.readline().strip()
     
     def send(self, message):
+               
 
         self.writer.write(message + "\n")
 
         self.writer.flush()
+
+
+    def close_client(self):
+
+        if hasattr(self, "reader") and self.reader:
+            self.reader.close()
+            self.reader = None
+
+        if hasattr(self, "writer") and self.writer:
+            self.writer.close()
+            self.writer = None
+
+        if self.connection:
+            self.connection.close()
+            self.connection = None
+
+        self.address = None
