@@ -19,7 +19,9 @@ class NetworkServer(CommunicationInterface):
         self.connection = None
         self.address = None
 
-    def initialise(self):
+    def initialise(self, configuration=None, logger=None):
+        self.configuration = configuration
+        self.logger = logger
 
         self.server = socket.socket(
             socket.AF_INET,

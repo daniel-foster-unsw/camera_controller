@@ -10,7 +10,7 @@ from abc import ABC, abstractmethod
 class CommunicationInterface(ABC):
 
     @abstractmethod
-    def initialise(self):
+    def initialise(self, configuration, logger):
         """Initialise the communication transport."""
         pass
 
