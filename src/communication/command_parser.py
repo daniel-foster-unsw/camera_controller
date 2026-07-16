@@ -82,7 +82,7 @@ class CommandParser:
             version=PROTOCOL_VERSION,
             status=STATUS_OK,
             message="Camera status.",
-            data=status
+            data=status.to_dict()
         )
     
     def _handle_camera_information(self):
