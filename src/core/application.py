@@ -161,6 +161,50 @@ class Application:
     def show_log_location(self):
         return self.logger.get_log_file()
     
+
+    def communication_loop(self):
+
+        while True:
+
+            self.communication.wait_for_client()
+
+            self.logger.info("Communication client connected.")
+
+            while True:
+
+                try:
+
+                    message = self.communication.receive()
+
+                    if message == "":
+                        self.logger.info("Client disconnected.")
+                        break
+
+                    self.logger.info(f"Received: {message}")
+
+                    command = JsonProtocol.deserialize(message)
+
+                    response = self.command_parser.execute(command)
+
+                    json_response = JsonProtocol.serialize(response)
+
+                    self.logger.info(f"Sending: {json_response}")
+
+                    self.communication.send(json_response)
+
+                except ConnectionResetError:
+                    self.logger.info("Client disconnected.")
+                    break
+
+                except Exception as error:
+                    self.logger.error(error)
+                    break
+
+            # Clean up the old client connection
+            self.communication.close_client()
+
+
+    
     """
     def process_serial_command(self):
         
@@ -180,7 +224,7 @@ class Application:
             self.logger.error(
                 f"Serial communication error: {error}"
             )
-    """
+    
     def communication_loop(self):
 
         self.communication.wait_for_client()
@@ -215,3 +259,5 @@ class Application:
             except Exception as error:
                 self.logger.error(error)
                 break
+"""
+
