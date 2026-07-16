@@ -133,16 +133,16 @@ class Application:
         return filename
 
 
-    def show_camera_information(self):
+    def get_camera_information(self):
         return self.camera.get_information()
     
-    def show_camera_status(self):
+    def get_camera_status(self):
         return self.camera.get_status()
     
-    def show_storage_information(self):
+    def get_storage_information(self):
         return self.storage.check_storage()
     
-    def show_configuration(self):
+    def get_configuration(self):
         return self.configuration.settings
     
     def run_camera_self_test(self):
