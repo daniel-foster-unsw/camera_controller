@@ -46,11 +46,27 @@ class NetworkServer(CommunicationInterface):
 
         self.connection, self.address = self.server.accept()
 
+        self.reader = self.connection.makefile(
+        "r",
+        encoding="utf-8"
+        )
+
+        self.writer = self.connection.makefile(
+            "w",
+            encoding="utf-8"
+        )
+
         print(
             f"Client connected: {self.address}"
         )
-
+        
     def stop(self):
+
+        if hasattr(self, "reader"):
+            self.reader.close()
+
+        if hasattr(self, "writer"):
+            self.writer.close()
 
         if self.connection:
             self.connection.close()
@@ -61,10 +77,10 @@ class NetworkServer(CommunicationInterface):
 
     def receive(self):
 
-        return self.connection.recv(4096).decode("utf-8").strip()
+        return self.reader.readline().strip()
     
     def send(self, message):
 
-        self.connection.sendall(
-            (message + "\n").encode("utf-8")
-        )
+        self.writer.write(message + "\n")
+
+        self.writer.flush()

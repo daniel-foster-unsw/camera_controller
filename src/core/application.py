@@ -196,14 +196,19 @@ class Application:
                 if not message:
                     continue
 
+                self.logger.info(f"Received: {message}")
                 command = JsonProtocol.deserialize(message)
 
                 response = self.command_parser.execute(command)
 
-                self.communication.send(
-                    JsonProtocol.serialize(response)
-                )
+                json_response = JsonProtocol.serialize(response)
+                self.logger.info(f"Sending: {json_response}")
 
-            except Exception as e:
+                self.communication.send(json_response)
+                
 
-                self.logger.error(str(e))
+            except Exception as error:
+
+                self.logger.error(
+                f"Communication error: {error}"
+            )
