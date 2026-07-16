@@ -22,3 +22,14 @@ class CameraStatus:
     capturing: bool
 
     error: bool
+
+
+    def to_dict(self):
+        return {
+            "state": self.state.name,
+            "ready": self.ready,
+            "connected": self.connected,
+            "initialised": self.initialised,
+            "capturing": self.capturing,
+            "error": self.error
+        }
