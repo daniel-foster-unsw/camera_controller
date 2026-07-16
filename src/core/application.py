@@ -12,6 +12,9 @@ from camera.camera_controller import CameraController
 from core.scan import Scan
 from communication.serial_manager import SerialManager
 from communication.command_parser import CommandParser
+from communication.network_server import NetworkServer
+
+from communication.json_protocol import JsonProtocol
 
 
 class Application:
@@ -26,7 +29,8 @@ class Application:
         self.scan = Scan()
         self.storage = StorageManager(self.scan)
         self.camera = CameraController()
-        self.serial_manager = SerialManager()
+ #       self.serial_manager = SerialManager()
+        self.communication = None
         self.command_parser = CommandParser(self, self.logger)
 
     def startup(self):
@@ -44,8 +48,44 @@ class Application:
         self.logger.initialise(self.configuration)
 
 
-        print("Starting serial manager...")
-        self.serial_manager.initialise(self.configuration, self.logger)
+#        print("Starting serial manager...")
+#        self.serial_manager.initialise(self.configuration, self.logger)
+
+
+
+        print("Starting communication manager...")
+        mode = self.configuration.get(
+            "communication",
+            "mode"
+        )
+
+        if mode == "serial":
+
+            print("Starting serial manager...")
+
+            self.communication = SerialManager()
+
+        elif mode == "network":
+
+            print("Starting network server...")
+
+            network = self.configuration.get("communication", "network")
+
+            self.communication = NetworkServer(
+                host=network["host"],
+                port=network["port"]
+            )
+
+        else:
+
+            raise ValueError(
+                f"Unknown communication mode: {mode}"
+            )
+
+        self.communication.initialise(
+            self.configuration,
+            self.logger
+        )
 
         print("Checking storage...")
   
@@ -61,11 +101,25 @@ class Application:
 
         
     def run(self):
-
+        """
         print("Application running...")
         while True:
             self.process_serial_command()
+            
+        """
+        mode = self.configuration.get(
+                "communication",
+                "mode"
+            )
 
+        if mode == "menu":
+
+            self.menu.run()
+
+        else:
+
+            self.communication_loop()
+        
     def shutdown(self):
 
         print("Shutting down...")
@@ -107,11 +161,11 @@ class Application:
     def show_log_location(self):
         return self.logger.get_log_file()
     
-
+    """
     def process_serial_command(self):
-        """
-        Process one incoming serial command.
-        """
+        
+ #       Process one incoming serial command.
+        
         try:
             command = self.serial_manager.read()
 
@@ -126,3 +180,30 @@ class Application:
             self.logger.error(
                 f"Serial communication error: {error}"
             )
+    """
+    def communication_loop(self):
+
+        self.communication.wait_for_client()
+
+        self.logger.info("Communication client connected.")
+
+        while True:
+
+            try:
+
+                message = self.communication.receive()
+
+                if not message:
+                    continue
+
+                command = JsonProtocol.deserialize(message)
+
+                response = self.command_parser.execute(command)
+
+                self.communication.send(
+                    JsonProtocol.serialize(response)
+                )
+
+            except Exception as e:
+
+                self.logger.error(str(e))

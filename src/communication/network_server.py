@@ -5,9 +5,10 @@ TCP communication server for the Camera Controller.
 """
 
 import socket
+from communication.communication_interface import CommunicationInterface
 
 
-class NetworkServer:
+class NetworkServer(CommunicationInterface):
 
     def __init__(self, host="0.0.0.0", port=5000):
 
@@ -56,3 +57,14 @@ class NetworkServer:
 
         if self.server:
             self.server.close()
+
+
+    def receive(self):
+
+        return self.connection.recv(4096).decode("utf-8").strip()
+    
+    def send(self, message):
+
+        self.connection.sendall(
+            (message + "\n").encode("utf-8")
+        )

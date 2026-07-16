@@ -1,7 +1,9 @@
 import serial
-from .command import Command
 
-class SerialManager:
+from communication.communication_interface import CommunicationInterface
+
+
+class SerialManager(CommunicationInterface):
 
     def __init__(self):
 
@@ -60,7 +62,7 @@ class SerialManager:
             f"Serial interface enabled on {self.port} @ {self.baud_rate} baud."
         )
 
-    def read(self):
+    def recieve(self):
         if not self.connected:
             return None
 
@@ -73,17 +75,21 @@ class SerialManager:
 
 #        return line.decode("utf-8").strip()
         try:
-            return Command.from_json(json_string)
+            return json_string
 
         except Exception as e:
             self.logger.error(f"Invalid command received: {e}")
         return None
         
-    def write(self, response):
+
+    def send(self, message):
+#    def send(self, response):
 
         if not self.connected:
             return
-        message = response.to_json()
+        
+#        message = response.to_json()
+
         self.serial_port.write(
             (message + "\n").encode("utf-8")
         )

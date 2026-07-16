@@ -11,9 +11,19 @@ def main():
     try:
         app.startup()
 
-#        app.run()
-        menu = ConsoleMenu(app)
-        menu.run()
+        mode = app.configuration.get(
+            "communication",
+            "mode"
+        )
+
+        if mode == "menu":
+
+            menu = ConsoleMenu(app)
+            menu.run()
+
+        else:
+
+            app.run()
 
     finally:
 
