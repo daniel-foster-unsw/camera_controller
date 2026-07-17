@@ -144,6 +144,6 @@ class CommandParser:
                 "filesize": str(result.filesize),
                 "width": result.width,
                 "height": result.height,
-                "format":result.format
+                "format":result.image_format
             }
         )
