@@ -141,7 +141,7 @@ class CommandParser:
             message="Image captured.",
             data={
                 "filename": str(result.filename),
-                "filesize": str(result.filesize),
+                "filesize": result.filesize,
 #                "filesize": str(result.filesize),
                 "width": result.width,
                 "height": result.height,
