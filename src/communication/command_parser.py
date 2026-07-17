@@ -142,6 +142,7 @@ class CommandParser:
             data={
                 "filename": str(result.filename),
                 "filesize": str(result.filesize),
+#                "filesize": str(result.filesize),
                 "width": result.width,
                 "height": result.height,
                 "format":result.image_format
