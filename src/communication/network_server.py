@@ -88,6 +88,14 @@ class NetworkServer(CommunicationInterface):
 
         self.writer.flush()
 
+    def send_bytes(self, data: bytes):
+        """
+        Send binary data over the existing TCP connection.
+        """
+        if self.connection is None:
+            raise ConnectionError("No client connected.")
+        self.connection.sendall(data)
+
 
     def close_client(self):
 

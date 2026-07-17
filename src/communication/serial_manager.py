@@ -94,6 +94,11 @@ class SerialManager(CommunicationInterface):
             (message + "\n").encode("utf-8")
         )
 
+    def send_bytes(self, data: bytes):
+        raise NotImplementedError(
+            "Binary transfer is not supported over serial."
+        )
+
 
     def stop(self):
 

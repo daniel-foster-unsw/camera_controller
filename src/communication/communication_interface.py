@@ -34,3 +34,8 @@ class CommunicationInterface(ABC):
     def stop(self):
         """Close the communication transport."""
         pass
+
+    @abstractmethod
+    def send_bytes(self, data: bytes):
+        """Send binary data."""
+        pass

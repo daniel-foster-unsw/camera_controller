@@ -63,6 +63,12 @@ class CommandParser:
         elif command.command == CAPTURE_IMAGE:
             return self._handle_capture_image()
         
+        elif command.command == "DOWNLOAD_IMAGE":
+            filename = command.parameters["filename"]
+            image = self.application.download_image(filename)
+            return image
+
+
 
         else:        
             return Response(

@@ -9,13 +9,16 @@ from core.logger_manager import LoggerManager
 from core.configuration import Configuration
 from core.storage_manager import StorageManager
 from camera.camera_controller import CameraController
+
 from core.scan import Scan
+from communication.response import Response
+
 from communication.serial_manager import SerialManager
 from communication.command_parser import CommandParser
 from communication.network_server import NetworkServer
 
 from communication.json_protocol import JsonProtocol
-
+from services.image_transfer_service import ImageTransferService
 
 class Application:
     """
@@ -32,6 +35,8 @@ class Application:
  #       self.serial_manager = SerialManager()
         self.communication = None
         self.command_parser = CommandParser(self, self.logger)
+
+        self.image_transfer = ImageTransferService()
 
     def startup(self):
         
@@ -162,6 +167,10 @@ class Application:
         return self.logger.get_log_file()
     
 
+    def download_image(self, filename):
+
+        return self.image_transfer.load_image(filename)
+
     def communication_loop(self):
 
         while True:
@@ -185,12 +194,24 @@ class Application:
                     command = JsonProtocol.deserialize(message)
 
                     response = self.command_parser.execute(command)
+ 
+                    if isinstance(response, bytes):
 
-                    json_response = JsonProtocol.serialize(response)
+                        header = Response(
+                            status="OK",
+                            message="Image transfer starting.",
+                            data={"filesize": len(response)}
+                            )
 
-                    self.logger.info(f"Sending: {json_response}")
+                        self.communication.send(
+                            JsonProtocol.serialize(header)
+                        )
 
-                    self.communication.send(json_response)
+                        self.communication.send_bytes(response)
+                    else:
+                        json_response = JsonProtocol.serialize(response)
+                        self.logger.info(f"Sending: {json_response}")
+                        self.communication.send(json_response)
 
                 except ConnectionResetError:
                     self.logger.info("Client disconnected.")
