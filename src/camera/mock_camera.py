@@ -163,6 +163,7 @@ class MockCamera(CameraInterface):
         try:
 
             image.save(filename)
+            filesize = filename.stat().st_size
             self.state = CameraState.READY
 #            print("Save succeeded")
             self.logger.info(f"Image saved: {filename}")
@@ -197,7 +198,8 @@ class MockCamera(CameraInterface):
 
                 camera_id=self.camera_id,
 
-                image_format=self.image_format
+                image_format=self.image_format,
+                filesize=filesize
 
         )
 

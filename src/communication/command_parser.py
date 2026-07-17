@@ -14,7 +14,8 @@ from communication.protocol import (
     GET_STORAGE_INFORMATION,
     GET_CONFIGURATION,
     SELF_TEST,
-    SHUTDOWN 
+    SHUTDOWN,
+    DOWNLOAD_IMAGE
 )
 
 from .response import Response
@@ -132,13 +133,17 @@ class CommandParser:
 
     def _handle_capture_image(self):
 
-        filename = self.application.capture_test_image()
+        result = self.application.capture_test_image()
 
         return Response(
             version=PROTOCOL_VERSION,
             status=STATUS_OK,
             message="Image captured.",
             data={
-                "filename": str(filename)
+                "filename": str(result.filename),
+                "filesize": str(result.filesize),
+                "width": result.width,
+                "height": result.height,
+                "format":result.format
             }
         )

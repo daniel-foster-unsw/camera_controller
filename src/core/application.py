@@ -128,9 +128,9 @@ class Application:
 #Menu Classes
     def capture_test_image(self):
         filename = self.storage.get_image_path()
-        self.camera.capture(filename)
-        print(f"Captured: {filename}")
-        return filename
+        result = self.camera.capture(filename)
+        #print(f"Captured: {filename}")
+        return result
 
 
     def get_camera_information(self):

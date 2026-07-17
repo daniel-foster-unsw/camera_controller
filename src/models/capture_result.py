@@ -27,3 +27,5 @@ class CaptureResult:
     camera_id: str
 
     image_format: str
+
+    filesize: int = 0

@@ -89,6 +89,7 @@ class PiCamera(CameraInterface):
             )
 
             self.camera.capture_file(str(filename))
+            filesize = filename.stat().st_size
             self.state = CameraState.READY
             self.logger.info(f"Image saved: {filename}")
 
@@ -99,7 +100,8 @@ class PiCamera(CameraInterface):
                 width=self.width,
                 height=self.height,
                 camera_id=self.camera_id,
-                image_format=self.image_format
+                image_format=self.image_format,
+                filesize=filesize
             )
         except Exception as e:
             self.state = CameraState.ERROR
