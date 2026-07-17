@@ -70,9 +70,14 @@ class StorageManager:
         return filename
     
     def get_image_path(self):
-        return(
-             self.scan_directory
-                / self.get_next_filename()
-                ) 
+        return(self.scan_directory / self.get_next_filename())
+    
+    
+
+    def get_image_path(self, filename: str):
+        for path in self.image_directory.rglob(filename):
+            return path
+
+        raise FileNotFoundError(f"Image not found: {filename}")
     
  

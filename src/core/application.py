@@ -167,10 +167,13 @@ class Application:
         return self.logger.get_log_file()
     
 
-    def download_image(self, filename):
-
-        return self.image_transfer.load_image(filename)
-
+    def download_image(self, filename: str):
+        """
+        Load an image ready for transfer.
+        """
+        image_path = self.storage.get_image_path(filename)
+        return self.image_transfer.load_image(image_path)
+    
     def communication_loop(self):
 
         while True:
