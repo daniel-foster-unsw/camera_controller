@@ -16,7 +16,8 @@ from communication.protocol import (
     GET_CONFIGURATION,
     SELF_TEST,
     SHUTDOWN,
-    DOWNLOAD_IMAGE
+    DOWNLOAD_IMAGE,
+    DELETE_IMAGE
 )
 
 from .response import Response
@@ -69,6 +70,11 @@ class CommandParser:
 #            filename = command.parameters["filename"]
 #            image = self.application.download_image(filename)
 #            return image
+
+        elif command.command == DELETE_IMAGE:
+            return self._handle_delete_image(command)
+
+            
 
 
 
@@ -165,3 +171,24 @@ class CommandParser:
         
         except FileNotFoundError:
             return Response(version = "1.0", status="ERROR", message="Image not found.")
+        
+
+
+
+    def _handle_delete_image(self, command):
+
+        filename = command.parameters["filename"]
+
+        deleted = self.application.delete_image(filename)
+
+        if deleted:
+
+            return Response(
+                status="OK",
+                message="Image deleted."
+            )
+
+        return Response(
+            status="ERROR",
+            message="Image not found."
+        )

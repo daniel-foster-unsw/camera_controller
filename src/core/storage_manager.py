@@ -79,5 +79,27 @@ class StorageManager:
             return path
 
         raise FileNotFoundError(f"Image not found: {filename}")
+
+
+
+    def delete_image(self, filename: str) -> bool:
+
+        image_path = self.get_image_path(filename)
+
+        if not image_path.exists():
+
+            self.logger.warning(
+                f"Image not found: {filename}"
+            )
+
+            return False
+
+        image_path.unlink()
+
+        self.logger.info(
+            f"Deleted image: {filename}"
+        )
+
+        return True
     
  

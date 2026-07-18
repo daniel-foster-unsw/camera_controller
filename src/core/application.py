@@ -168,6 +168,12 @@ class Application:
     def show_log_location(self):
         return self.logger.get_log_file()
     
+    def delete_image(self, filename: str) -> bool:
+        """
+        Delete an image.
+        """
+
+        return self.storage.delete_image(filename)
 
     def download_image(self, filename: str):
         """
