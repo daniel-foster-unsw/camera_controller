@@ -58,7 +58,7 @@ class StorageManager:
     def image_count(self):
         return len(list(self.image_directory.glob("*")))
     
-    def find_next_filename(self):
+    def get_next_filename(self):
         #self.image_number += 1
         image_number = self.scan.next_image_number()
         filename = (
