@@ -173,7 +173,7 @@ class Application:
         """
         Load an image ready for transfer.
         """
-        image_path = self.storage.get_image_path(filename)
+        image_path = self.storage.find_image_path(filename)
         return self.image_transfer.load_image(image_path)
     
     def communication_loop(self):
