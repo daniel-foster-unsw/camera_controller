@@ -107,15 +107,15 @@ class NetworkServer(CommunicationInterface):
             self.writer.close()
             self.writer = None
 
-        if self.connection:
+        if hasattr(self, "connection") and self.connection:
             self.connection.close()
             self.connection = None
 
         self.address = None
 
     def close(self):
-        if self.client:
-            self.client.close()
+        
+        self.close_client()
 
         if hasattr(self, "server") and self.server:
             self.server.close()
