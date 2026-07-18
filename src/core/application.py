@@ -168,6 +168,15 @@ class Application:
     def show_log_location(self):
         return self.logger.get_log_file()
     
+    
+    def download_image(self, filename: str):
+        """
+        Load an image ready for transfer.
+        """
+        image_path = self.storage.find_image_path(filename)
+        return self.image_transfer.load_image(image_path)
+    
+
     def delete_image(self, filename: str) -> bool:
         """
         Delete an image.
@@ -175,12 +184,6 @@ class Application:
 
         return self.storage.delete_image(filename)
 
-    def download_image(self, filename: str):
-        """
-        Load an image ready for transfer.
-        """
-        image_path = self.storage.find_image_path(filename)
-        return self.image_transfer.load_image(image_path)
     
     def communication_loop(self):
 
