@@ -74,7 +74,7 @@ class StorageManager:
     
     
 
-    def get_image_path(self, filename: str):
+    def find_image_path(self, filename: str):
         for path in self.image_directory.rglob(filename):
             return path
 
