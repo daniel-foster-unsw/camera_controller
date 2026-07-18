@@ -61,10 +61,7 @@ class Application:
 
 
         print("Starting communication manager...")
-        mode = self.configuration.get(
-            "communication",
-            "mode"
-        )
+        mode = self.configuration.get("communication", "mode")
 
         if mode == "serial":
 
@@ -89,14 +86,13 @@ class Application:
                 f"Unknown communication mode: {mode}"
             )
 
-        self.communication.initialise(
-            self.configuration,
-            self.logger
-        )
+        self.communication.initialise(self.configuration, self.logger)
 
         print("Checking storage...")
   
-        self.storage.initialise(self.configuration)
+        self.storage.initialise(self.configuration, self.logger)
+
+        print("Checking camera...")
 
         self.camera.initialise(self.configuration, self.logger)
 #        filename = self.storage.get_image_path()

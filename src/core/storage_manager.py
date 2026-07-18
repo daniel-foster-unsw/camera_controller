@@ -19,6 +19,8 @@ from core.scan import Scan
 class StorageManager:
     def __init__(self, scan):
         self.scan = scan
+
+        self.logger = None
         self.project_root = Path(__file__).resolve().parents[1]
         storage_directory = None
         self.image_directory = None
@@ -36,38 +38,56 @@ class StorageManager:
         #self.scan_directory = (self.image_directory / self.scan_folder_name)
         self.scan_directory = None
 
-    def initialise(self,configuration):
+    def initialise(self,configuration, logger):
+        try:
+            self.logger = logger
+            storage_directory = configuration.get("storage", "directory")
+            self.image_directory = (self.project_root / storage_directory).resolve()
+            self.scan_directory = (self.image_directory / self.scan.folder_name)
 
-        storage_directory = configuration.get("storage", "directory")
-        self.image_directory = (self.project_root / storage_directory).resolve()
-        self.scan_directory = (self.image_directory / self.scan.folder_name)
+            self.image_directory.mkdir(parents=True, exist_ok=True)
+            self.scan_directory.mkdir(parents=True, exist_ok=True)
 
-        self.image_directory.mkdir(parents=True, exist_ok=True)
-        self.scan_directory.mkdir(parents=True, exist_ok=True)
+            print("✓ Storage ready.")
 
-        print("✓ Storage ready.")
+        except Exception as ex:
+            print("Failed to initalise storage")
+            raise
 
     def check_storage(self):
-        usage = shutil.disk_usage(self.project_root)
+        try:
+            usage = shutil.disk_usage(self.project_root)
+            
 
-        return {
-            "total": usage.total,
-            "used": usage.used,
-            "free": usage.free
-        }
+            return {
+                "total": usage.total,
+                "used": usage.used,
+                "free": usage.free
+            }
+        except Exception as ex:
+            self.logger.error(f"Failed to check storage: {ex}")
+            raise
+
+
+
     def image_count(self):
         return len(list(self.image_directory.glob("*")))
     
     def get_next_filename(self):
-        #self.image_number += 1
-        image_number = self.scan.next_image_number()
-        filename = (
-            f"{self.scan.timestamp}_"
-            f"{CAMERA_ID}_"
-            f"{image_number:06d}"
-            f"{IMAGE_EXTENSION}"
-        )
-        return filename
+        try:
+            #self.image_number += 1
+            image_number = self.scan.next_image_number()
+            filename = (
+                f"{self.scan.timestamp}_"
+                f"{CAMERA_ID}_"
+                f"{image_number:06d}"
+                f"{IMAGE_EXTENSION}"
+            )
+            return filename
+        
+        except Exception as ex:
+            self.logger.error(f"Failed to generate filename: {ex}")
+            raise
     
     def get_image_path(self):
         return(self.scan_directory / self.get_next_filename())
@@ -75,31 +95,44 @@ class StorageManager:
     
 
     def find_image_path(self, filename: str):
-        for path in self.image_directory.rglob(filename):
-            return path
+        self.logger.info(f"Searching for image: {filename}")
 
+
+        for path in self.image_directory.rglob(filename):
+            self.logger.info(f"Found image: {path}")
+            return path
+        
+
+        self.logger.warning(f"Image not found: {filename}")
         raise FileNotFoundError(f"Image not found: {filename}")
 
 
 
     def delete_image(self, filename: str) -> bool:
+        try:
+            image_path = self.find_image_path(filename)
 
-        image_path = self.get_image_path(filename)
+            """
+            if not image_path.exists():
 
-        if not image_path.exists():
+                self.logger.warning(
+                    f"Image not found: {filename}"
+                )
+            
+                return False
+            """
+            image_path.unlink()
 
-            self.logger.warning(
-                f"Image not found: {filename}"
-            )
+            self.logger.info(f"Deleted image: {filename}")
 
+            return True
+    
+        except FileNotFoundError:
+            self.logger.warning(f"Image not found: {filename}")
             return False
 
-        image_path.unlink()
-
-        self.logger.info(
-            f"Deleted image: {filename}"
-        )
-
-        return True
+        except Exception as ex:
+            self.logger.error(f"Failed to delete image '{filename}': {ex}")
+            return False
     
  
