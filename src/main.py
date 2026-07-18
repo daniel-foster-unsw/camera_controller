@@ -24,6 +24,8 @@ def main():
         else:
 
             app.run()
+    except KeyboardInterrupt:
+        print("\nStopping...")    
 
     finally:
 

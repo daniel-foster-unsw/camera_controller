@@ -112,3 +112,11 @@ class NetworkServer(CommunicationInterface):
             self.connection = None
 
         self.address = None
+
+    def close(self):
+        if self.client:
+            self.client.close()
+
+        if hasattr(self, "server") and self.server:
+            self.server.close()
+            self.server = None

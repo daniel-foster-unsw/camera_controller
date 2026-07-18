@@ -126,6 +126,9 @@ class Application:
     def shutdown(self):
 
         print("Shutting down...")
+        if self.communication is not None:
+            self.communication.close()
+        self.logger.info("Application shutdown complete.")
 
 
 #Menu Classes
