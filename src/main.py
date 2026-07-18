@@ -25,10 +25,14 @@ def main():
 
             app.run()
     except KeyboardInterrupt:
-        print("\nStopping...")    
+        print("\nShutdown requested by user.")    
+
+    except Exception as ex:
+        print(f"\nFatal error: {ex}")
+        raise
 
     finally:
-
+        print("Shutting down...")
         app.shutdown()
 
 if __name__ == "__main__":

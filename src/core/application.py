@@ -42,63 +42,66 @@ class Application:
 
     def startup(self):
         
-
-        print("Loading configuration...")
         try:
-            self.configuration.load()
+            print("Loading configuration...")
+            try:
+                self.configuration.load()
 
-        except Exception as e:
-            print(f"Error loading configuration: {e}")
+            except Exception as e:
+                print(f"Error loading configuration: {e}")
+                raise
+
+            print("Starting logger...")
+            self.logger.initialise(self.configuration)
+
+
+    #        print("Starting serial manager...")
+    #        self.serial_manager.initialise(self.configuration, self.logger)
+
+
+
+            print("Starting communication manager...")
+            mode = self.configuration.get("communication", "mode")
+
+            if mode == "serial":
+
+                print("Starting serial manager...")
+
+                self.communication = SerialManager()
+
+            elif mode == "network":
+
+                print("Starting network server...")
+
+                network = self.configuration.get("communication", "network")
+
+                self.communication = NetworkServer(
+                    host=network["host"],
+                    port=network["port"]
+                )
+
+            else:
+
+                raise ValueError(
+                    f"Unknown communication mode: {mode}"
+                )
+
+            self.communication.initialise(self.configuration, self.logger)
+
+            print("Checking storage...")
+    
+            self.storage.initialise(self.configuration, self.logger)
+
+            print("Checking camera...")
+
+            self.camera.initialise(self.configuration, self.logger)
+    #        filename = self.storage.get_image_path()
+    #        self.camera.capture(filename)
+    #        print(f"Captured: {filename}")
+            print("\nCamera Controller Ready\n")
+        except Exception:
+            self.shutdown()
             raise
-
-        print("Starting logger...")
-        self.logger.initialise(self.configuration)
-
-
-#        print("Starting serial manager...")
-#        self.serial_manager.initialise(self.configuration, self.logger)
-
-
-
-        print("Starting communication manager...")
-        mode = self.configuration.get("communication", "mode")
-
-        if mode == "serial":
-
-            print("Starting serial manager...")
-
-            self.communication = SerialManager()
-
-        elif mode == "network":
-
-            print("Starting network server...")
-
-            network = self.configuration.get("communication", "network")
-
-            self.communication = NetworkServer(
-                host=network["host"],
-                port=network["port"]
-            )
-
-        else:
-
-            raise ValueError(
-                f"Unknown communication mode: {mode}"
-            )
-
-        self.communication.initialise(self.configuration, self.logger)
-
-        print("Checking storage...")
-  
-        self.storage.initialise(self.configuration, self.logger)
-
-        print("Checking camera...")
-
-        self.camera.initialise(self.configuration, self.logger)
-#        filename = self.storage.get_image_path()
-#        self.camera.capture(filename)
-#        print(f"Captured: {filename}")
-        print("\nCamera Controller Ready\n")
 
 
 
@@ -125,9 +128,19 @@ class Application:
         
     def shutdown(self):
 
-        print("Shutting down...")
-        if self.communication is not None:
-            self.communication.close()
+        self.logger.info("Shutting down Camera Controller...")
+        try:
+            if self.communication is not None:
+                self.communication.stop()
+        except Exception as ex:
+            self.logger.error(f"Error stopping communication: {ex}")
+
+        try:
+            if self.camera:
+                self.camera.shutdown()
+        except Exception as ex:
+            self.logger.error(f"Error shutting down camera: {ex}")
+
         self.logger.info("Application shutdown complete.")
 
 

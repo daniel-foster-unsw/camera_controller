@@ -34,6 +34,9 @@ class NetworkServer(CommunicationInterface):
             1
         )
 
+        print(f"Host = {self.host}")
+        print(f"Port = {self.port}")
+
         self.server.bind(
             (self.host, self.port)
         )
@@ -64,6 +67,8 @@ class NetworkServer(CommunicationInterface):
         
     def stop(self):
 
+        self.close_client()
+        """
         if hasattr(self, "reader"):
             self.reader.close()
 
@@ -72,9 +77,19 @@ class NetworkServer(CommunicationInterface):
 
         if self.connection:
             self.connection.close()
-
+            self.connection = None
+        """
         if self.server:
-            self.server.close()
+            try:
+                self.server.shutdown(socket.SHUT_RDWR)
+            except OSError:
+                #Socket may not be connected yet.
+                pass
+
+            try:
+                self.server.close()
+            finally:
+                self.server = None
 
 
     def receive(self):
@@ -98,25 +113,49 @@ class NetworkServer(CommunicationInterface):
 
 
     def close_client(self):
-
+        
         if hasattr(self, "reader") and self.reader:
-            self.reader.close()
-            self.reader = None
+            try:
+                self.reader.close()
+            finally:
+                self.reader = None
 
         if hasattr(self, "writer") and self.writer:
-            self.writer.close()
-            self.writer = None
+            try:
+                self.writer.close()
+            finally:
+                self.writer = None
 
         if hasattr(self, "connection") and self.connection:
-            self.connection.close()
-            self.connection = None
+            try:
+                self.connection.shutdown(socket.SHUT_RDWR)
+            except OSError:
+                pass
+
+            try:
+                self.connection.close()
+            finally:
+                self.connection = None
 
         self.address = None
 
     def close(self):
         
         self.close_client()
-
+        """
         if hasattr(self, "server") and self.server:
             self.server.close()
             self.server = None
+
+        """
+        if self.server:
+            try:
+                self.server.shutdown(socket.SHUT_RDWR)
+            except OSError:
+                #Socket may not be connected yet.
+                pass
+
+            try:
+                self.server.close()
+            finally:
+                self.server = None
