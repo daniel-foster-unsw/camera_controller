@@ -3,6 +3,7 @@ command_parser.py
 
 Parses commands received over USB.
 """
+from communication.json_protocol import JsonProtocol
 from communication.protocol import (
     PROTOCOL_VERSION,
     PING,
@@ -63,10 +64,11 @@ class CommandParser:
         elif command.command == CAPTURE_IMAGE:
             return self._handle_capture_image()
         
-        elif command.command == "DOWNLOAD_IMAGE":
-            filename = command.parameters["filename"]
-            image = self.application.download_image(filename)
-            return image
+        elif command.command == DOWNLOAD_IMAGE:
+            return self._handle_download_image(command)
+#            filename = command.parameters["filename"]
+#            image = self.application.download_image(filename)
+#            return image
 
 
 
@@ -154,3 +156,12 @@ class CommandParser:
                 "format":result.image_format
             }
         )
+    
+    def _handle_download_image(self, command):
+        try:
+            filename = command.parameters["filename"]
+            image = self.application.download_image(filename)
+            return image
+        
+        except FileNotFoundError:
+            return Response(version = "1.0", status="ERROR", message="Image not found.")

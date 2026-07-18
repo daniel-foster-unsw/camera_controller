@@ -20,6 +20,8 @@ from communication.network_server import NetworkServer
 from communication.json_protocol import JsonProtocol
 from services.image_transfer_service import ImageTransferService
 
+from models.image_transfer import ImageTransfer
+
 class Application:
     """
     Coordinates the startup, execution and shutdown of the Camera Controller application.
@@ -198,19 +200,23 @@ class Application:
 
                     response = self.command_parser.execute(command)
  
-                    if isinstance(response, bytes):
+                    if isinstance(response, ImageTransfer):
 
                         header = Response(
+                            version="1.0",
                             status="OK",
                             message="Image transfer starting.",
-                            data={"filesize": len(response)}
-                            )
+                            data={
+                                "filename": response.filename,
+                                "filesize": response.filesize
+                            }
+                        )
 
                         self.communication.send(
                             JsonProtocol.serialize(header)
                         )
 
-                        self.communication.send_bytes(response)
+                        self.communication.send_bytes(response.data)
                     else:
                         json_response = JsonProtocol.serialize(response)
                         self.logger.info(f"Sending: {json_response}")

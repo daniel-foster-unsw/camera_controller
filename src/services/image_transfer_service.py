@@ -4,16 +4,17 @@ image_transfer_service.py
 Provides image loading services for transferring captured images
 to a remote client.
 """
-
 from dataclasses import dataclass
 from pathlib import Path
+from models.image_transfer import ImageTransfer
 
+"""
 @dataclass
 class ImageTransfer:
     filename: str
     filesize: int
     data: bytes
-
+"""
 
 class ImageTransferService:
 
