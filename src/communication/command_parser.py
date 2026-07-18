@@ -184,11 +184,13 @@ class CommandParser:
         if deleted:
 
             return Response(
+                version=PROTOCOL_VERSION,
                 status="OK",
                 message="Image deleted."
             )
 
         return Response(
+            version=PROTOCOL_VERSION,
             status="ERROR",
             message="Image not found."
         )
