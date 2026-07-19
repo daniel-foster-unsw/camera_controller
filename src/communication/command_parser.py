@@ -185,12 +185,12 @@ class CommandParser:
 
             return Response(
                 version=PROTOCOL_VERSION,
-                status="OK",
+                status=STATUS_OK,
                 message="Image deleted."
             )
 
         return Response(
             version=PROTOCOL_VERSION,
-            status="ERROR",
+            status=STATUS_ERROR,
             message="Image not found."
         )
