@@ -234,13 +234,17 @@ class Application:
                         )
 
                         #Sending Header
-                        self.logger.info(f"Sending header: {header}")
-                        self.communication.send(
-                            JsonProtocol.serialize(header)
-                        )
+                        json_header = JsonProtocol.serialize(header)
+                        self.logger.info(f"Sending header: {json_header}")
+                        self.communication.send(json_header)
                         #Sending data
                         self.logger.info(f"Sending {response.filesize} bytes...")
                         self.communication.send_bytes(response.data)
+                        self.logger.info("Image transfer complete.")
+
+                        continue
+
+                        
                     else:
                         json_response = JsonProtocol.serialize(response)
                         self.logger.info(f"Sending: {json_response}")
