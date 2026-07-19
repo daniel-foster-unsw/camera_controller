@@ -123,7 +123,7 @@ class StorageManager:
 
 
             if image_path is None:
-                self.logger.warning(f"Image not found: {image_path}")
+                self.logger.warning(f"Image not found: {filename}")
                 return False
 
             """
@@ -140,16 +140,16 @@ class StorageManager:
             
             image_path.unlink()
 
-            self.logger.info(f"Deleted image: {image_path}")
+            self.logger.info(f"Deleted image: {filename}")
 
             return True
     
         except FileNotFoundError:
-            self.logger.warning(f"Image not found: {image_path}")
+            self.logger.warning(f"Image not found: {filename}")
             return False
 
         except Exception as ex:
-            self.logger.error(f"Failed to delete image '{image_path}': {ex}")
+            self.logger.error(f"Failed to delete image '{filename}': {ex}")
             return False
     
  
