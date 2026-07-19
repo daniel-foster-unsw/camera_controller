@@ -18,7 +18,8 @@ from communication.protocol import (
     SHUTDOWN,
     DOWNLOAD_IMAGE,
     DELETE_IMAGE,
-    LIST_IMAGES
+    LIST_IMAGES,
+    DELETE_SCAN
 )
 
 from .response import Response
@@ -77,6 +78,9 @@ class CommandParser:
         
         elif command.command == LIST_IMAGES:
             return self._handle_list_images(command)
+        
+        elif command.command == DELETE_SCAN:
+            return self._handle_delete_scan(command)
 
             
 
@@ -208,4 +212,23 @@ class CommandParser:
             data={
                 "scans": scans
             }
+        )
+    
+    def _handle_delete_scan(self, command):
+
+        scan = command.parameters["scan"]
+
+        deleted = self.application.delete_scan(scan)
+
+        if deleted:
+            return Response(
+                version=PROTOCOL_VERSION,
+                status=STATUS_OK,
+                message="Scan deleted."
+            )
+
+        return Response(
+            version=PROTOCOL_VERSION,
+            status=STATUS_ERROR,
+            message="Scan not found."
         )
