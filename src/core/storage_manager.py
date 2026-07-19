@@ -151,5 +151,60 @@ class StorageManager:
         except Exception as ex:
             self.logger.error(f"Failed to delete image '{filename}': {ex}")
             return False
+        
+
+def list_images(self):
+    """
+    Return all scans and their images.
+
+    Returns
+    -------
+    list
+        [
+            {
+                "scan": "...",
+                "images": [
+                    {
+                        "filename": "...",
+                        "filesize": 12345
+                    }
+                ]
+            }
+        ]
+    """
+
+    scans = []
+
+    self.logger.info("Listing stored images...")
+
+    for scan_directory in sorted(self.image_directory.iterdir()):
+
+        if not scan_directory.is_dir():
+            continue
+
+        scan = {
+            "scan": scan_directory.name,
+            "images": []
+        }
+
+        for image in sorted(scan_directory.glob(f"*{IMAGE_EXTENSION}")):
+
+            scan["images"].append(
+                {
+                    "filename": image.name,
+                    "filesize": image.stat().st_size
+                }
+            )
+
+        scans.append(scan)
+
+    self.logger.info(f"Found {len(scans)} scan(s).")
+
+    return scans
+
+
+
+
+
     
  

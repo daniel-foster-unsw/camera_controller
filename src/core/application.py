@@ -196,7 +196,17 @@ class Application:
 
         return self.storage.delete_image(filename)
 
-    
+    def list_images(self):
+        """
+        Return all stored scans.
+        """
+        return self.storage.list_images()
+
+
+
+
+
+
     def communication_loop(self):
 
         while True:

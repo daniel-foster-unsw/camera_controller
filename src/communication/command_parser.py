@@ -17,7 +17,8 @@ from communication.protocol import (
     SELF_TEST,
     SHUTDOWN,
     DOWNLOAD_IMAGE,
-    DELETE_IMAGE
+    DELETE_IMAGE,
+    LIST_IMAGES
 )
 
 from .response import Response
@@ -73,6 +74,9 @@ class CommandParser:
 
         elif command.command == DELETE_IMAGE:
             return self._handle_delete_image(command)
+        
+        elif command.command == LIST_IMAGES:
+            return self._handle_list_images(command)
 
             
 
@@ -173,8 +177,6 @@ class CommandParser:
             return Response(version = "1.0", status="ERROR", message="Image not found.")
         
 
-
-
     def _handle_delete_image(self, command):
 
         filename = command.parameters["filename"]
@@ -193,4 +195,17 @@ class CommandParser:
             version=PROTOCOL_VERSION,
             status=STATUS_ERROR,
             message="Image not found."
+        )
+    
+    def _handle_list_images(self, command):
+
+        scans = self.application.list_images()
+
+        return Response(
+            version=PROTOCOL_VERSION,
+            status=STATUS_OK,
+            message="Images found.",
+            data={
+                "scans": scans
+            }
         )
