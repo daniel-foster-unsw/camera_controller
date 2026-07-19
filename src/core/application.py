@@ -145,7 +145,7 @@ class Application:
 
 
 #Menu Classes
-    def capture_test_image(self):
+    def capture_image(self):
         filename = self.storage.get_image_path()
         result = self.camera.capture(filename)
         #print(f"Captured: {filename}")

@@ -155,7 +155,7 @@ class CommandParser:
 
     def _handle_capture_image(self):
 
-        result = self.application.capture_test_image()
+        result = self.application.capture_image()
 
         return Response(
             version=PROTOCOL_VERSION,
