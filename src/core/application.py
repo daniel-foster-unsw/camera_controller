@@ -202,8 +202,8 @@ class Application:
         """
         return self.storage.list_images()
 
-def delete_scan(self, scan: str):
-    return self.storage.delete_scan(scan)
+    def delete_scan(self, scan: str):
+        return self.storage.delete_scan(scan)
 
 
 
