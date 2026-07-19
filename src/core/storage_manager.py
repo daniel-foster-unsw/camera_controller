@@ -204,19 +204,19 @@ class StorageManager:
 
 
 
-def delete_scan(self, scan: str) -> bool:
+    def delete_scan(self, scan: str) -> bool:
 
-    scan_directory = self.image_directory / scan
+        scan_directory = self.image_directory / scan
 
-    if not scan_directory.exists():
-        self.logger.warning(f"Scan not found: {scan}")
-        return False
+        if not scan_directory.exists():
+            self.logger.warning(f"Scan not found: {scan}")
+            return False
 
-    shutil.rmtree(scan_directory)
+        shutil.rmtree(scan_directory)
 
-    self.logger.info(f"Deleted scan: {scan}")
+        self.logger.info(f"Deleted scan: {scan}")
 
-    return True
+        return True
 
     
  
