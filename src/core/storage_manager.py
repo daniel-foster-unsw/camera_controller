@@ -153,54 +153,54 @@ class StorageManager:
             return False
         
 
-def list_images(self):
-    """
-    Return all scans and their images.
+    def list_images(self):
+        """
+        Return all scans and their images.
 
-    Returns
-    -------
-    list
-        [
-            {
-                "scan": "...",
-                "images": [
-                    {
-                        "filename": "...",
-                        "filesize": 12345
-                    }
-                ]
-            }
-        ]
-    """
-
-    scans = []
-
-    self.logger.info("Listing stored images...")
-
-    for scan_directory in sorted(self.image_directory.iterdir()):
-
-        if not scan_directory.is_dir():
-            continue
-
-        scan = {
-            "scan": scan_directory.name,
-            "images": []
-        }
-
-        for image in sorted(scan_directory.glob(f"*{IMAGE_EXTENSION}")):
-
-            scan["images"].append(
+        Returns
+        -------
+        list
+            [
                 {
-                    "filename": image.name,
-                    "filesize": image.stat().st_size
+                    "scan": "...",
+                    "images": [
+                        {
+                            "filename": "...",
+                            "filesize": 12345
+                        }
+                    ]
                 }
-            )
+            ]
+        """
 
-        scans.append(scan)
+        scans = []
 
-    self.logger.info(f"Found {len(scans)} scan(s).")
+        self.logger.info("Listing stored images...")
 
-    return scans
+        for scan_directory in sorted(self.image_directory.iterdir()):
+
+            if not scan_directory.is_dir():
+                continue
+
+            scan = {
+                "scan": scan_directory.name,
+                "images": []
+            }
+
+            for image in sorted(scan_directory.glob(f"*{IMAGE_EXTENSION}")):
+
+                scan["images"].append(
+                    {
+                        "filename": image.name,
+                        "filesize": image.stat().st_size
+                    }
+                )
+
+            scans.append(scan)
+
+        self.logger.info(f"Found {len(scans)} scan(s).")
+
+        return scans
 
 
 
