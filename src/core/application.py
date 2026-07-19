@@ -233,10 +233,13 @@ class Application:
                             }
                         )
 
+                        #Sending Header
+                        self.logger.info(f"Sending header: {header}")
                         self.communication.send(
                             JsonProtocol.serialize(header)
                         )
-
+                        #Sending data
+                        self.logger.info(f"Sending {response.filesize} bytes...")
                         self.communication.send_bytes(response.data)
                     else:
                         json_response = JsonProtocol.serialize(response)
