@@ -109,8 +109,22 @@ class StorageManager:
 
 
     def delete_image(self, filename: str) -> bool:
+
+        """
+        Delete an image.
+
+        Returns
+        -------
+        True: Image deleted.
+        False: Image not found.
+        """
         try:
             image_path = self.find_image_path(filename)
+
+
+            if image_path is None:
+                self.logger.warning(f"Image not found: {filename}")
+                return False
 
             """
             if not image_path.exists():
@@ -121,6 +135,9 @@ class StorageManager:
             
                 return False
             """
+
+
+            
             image_path.unlink()
 
             self.logger.info(f"Deleted image: {filename}")
