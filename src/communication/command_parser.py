@@ -232,7 +232,7 @@ class CommandParser:
 
         scans = self.application.list_images()
 
-
+        """
         return Response(
             version=PROTOCOL_VERSION,
             status=STATUS_OK,
@@ -250,7 +250,7 @@ class CommandParser:
                 "scans": scans
             }
         )
-        """
+        
     
     def _handle_delete_scan(self, command):
 
