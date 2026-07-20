@@ -100,7 +100,8 @@ class StorageManager:
 
         self.require_scan()
 
-        scan = ScanInfo(self.scan)
+        #scan = ScanInfo(self.scan)
+        scan= ScanInfo(name = self.scan.folder_name)
 
         self.logger.info(
             f"Stopped scan: {self.scan.folder_name}"
@@ -116,7 +117,8 @@ class StorageManager:
         if self.scan is None:
             return None
 
-        return ScanInfo(self.scan)
+        #return ScanInfo(self.scan)
+        return ScanInfo(name = self.scan.folder_name)
     
     def require_scan(self):
 
