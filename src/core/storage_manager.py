@@ -57,7 +57,7 @@ class StorageManager:
             self.logger = logger
             storage_directory = configuration.get("storage", "directory")
             self.image_directory = (self.project_root / storage_directory).resolve()
-            self.scan_directory = (self.image_directory / self.scan.folder_name)
+            #self.scan_directory = (self.image_directory / self.scan.folder_name)
 
             self.image_directory.mkdir(parents=True, exist_ok=True)
             #self.scan_directory.mkdir(parents=True, exist_ok=True)
