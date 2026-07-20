@@ -7,7 +7,7 @@ class ScanInfo:
     """
     Information about a scan returned by the protocol.
     """
-    name: str
+    scan: str
 
     
     """
