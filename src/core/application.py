@@ -31,8 +31,9 @@ class Application:
         self.logger = LoggerManager()
         self.configuration = Configuration()
         #self.storage = StorageManager()
-        self.scan = Scan()
-        self.storage = StorageManager(self.scan)
+        #self.scan = Scan()
+        #self.storage = StorageManager(self.scan)
+        self.storage = StorageManager()
         self.camera = CameraController()
  #       self.serial_manager = SerialManager()
         self.communication = None
