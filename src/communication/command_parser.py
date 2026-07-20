@@ -3,6 +3,8 @@ command_parser.py
 
 Parses commands received over USB.
 """
+from core.storage_manager import StorageManager
+
 from communication.json_protocol import JsonProtocol
 from communication.protocol import (
     PROTOCOL_VERSION,
@@ -270,7 +272,7 @@ class CommandParser:
     def _handle_stop_scan(self):
 
         scan = self.application.stop_scan()
-
+        self.require_scan()
         return Response(
             version=PROTOCOL_VERSION,
             status=STATUS_OK,
@@ -281,6 +283,14 @@ class CommandParser:
     def _handle_get_scan(self):
 
         scan = self.application.get_scan()
+
+        if scan is None:
+            return Response(
+                version=PROTOCOL_VERSION,
+                status=STATUS_OK,
+                message="No active scan.",
+                data=None
+            )
 
         return Response(
             version=PROTOCOL_VERSION,
