@@ -169,6 +169,9 @@ class CommandParser:
 
     def _handle_capture_image(self):
 
+
+        self.application.storage.require_scan()
+
         result = self.application.capture_image()
 
         return Response(
@@ -187,6 +190,8 @@ class CommandParser:
     
     def _handle_download_image(self, command):
         try:
+            self.application.storage.require_scan()
+
             filename = command.parameters["filename"]
             image = self.application.download_image(filename)
             return image
@@ -196,6 +201,8 @@ class CommandParser:
         
 
     def _handle_delete_image(self, command):
+
+        self.application.storage.require_scan()
 
         filename = command.parameters["filename"]
 
@@ -216,6 +223,8 @@ class CommandParser:
         )
     
     def _handle_list_images(self, command):
+
+        self.application.storage.require_scan()
 
         scans = self.application.list_images()
 
