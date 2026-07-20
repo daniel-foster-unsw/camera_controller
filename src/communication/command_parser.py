@@ -30,6 +30,7 @@ from communication.protocol import (
 from .response import Response
 
 from core.storage_manager import StorageManager
+from core.storage_exceptions import StorageError
 
 class CommandParser:
 
@@ -283,14 +284,23 @@ class CommandParser:
     
     def _handle_stop_scan(self):
 
-        scan = self.application.stop_scan()
-        #self.require_scan()
-        return Response(
-            version=PROTOCOL_VERSION,
-            status=STATUS_OK,
-            message="Scan stopped.",
-            data=scan
-        )
+        try:
+
+            scan = self.application.stop_scan()
+            #self.require_scan()
+            return Response(
+                version=PROTOCOL_VERSION,
+                status=STATUS_OK,
+                message="Scan stopped.",
+                data=scan
+            )
+        except StorageError:
+            return Response(
+                version=PROTOCOL_VERSION,
+                status=STATUS_ERROR,
+                message="No active scan."
+            )
+
     
     def _handle_get_scan(self):
 
