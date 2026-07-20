@@ -93,7 +93,8 @@ class StorageManager:
         )
         """
 
-        return ScanInfo(self.scan)
+        #return ScanInfo(self.scan)
+        return ScanInfo(name = self.scan.folder_name)
 
     def stop_scan(self):
 
