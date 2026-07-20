@@ -29,6 +29,8 @@ from communication.protocol import (
 
 from .response import Response
 
+from core.storage_manager import StorageManager
+
 class CommandParser:
 
     def __init__(self, application, logger):
@@ -171,6 +173,7 @@ class CommandParser:
 
 
         self.application.storage.require_scan()
+        
 
         result = self.application.capture_image()
 
@@ -190,7 +193,7 @@ class CommandParser:
     
     def _handle_download_image(self, command):
         try:
-            self.application.storage.require_scan()
+            #self.application.storage.require_scan()
 
             filename = command.parameters["filename"]
             image = self.application.download_image(filename)
@@ -202,7 +205,7 @@ class CommandParser:
 
     def _handle_delete_image(self, command):
 
-        self.application.storage.require_scan()
+        #self.application.storage.require_scan()
 
         filename = command.parameters["filename"]
 
@@ -224,7 +227,7 @@ class CommandParser:
     
     def _handle_list_images(self, command):
 
-        self.application.storage.require_scan()
+        #self.application.storage.require_scan()
 
         scans = self.application.list_images()
 
@@ -281,7 +284,7 @@ class CommandParser:
     def _handle_stop_scan(self):
 
         scan = self.application.stop_scan()
-        self.require_scan()
+        #self.require_scan()
         return Response(
             version=PROTOCOL_VERSION,
             status=STATUS_OK,

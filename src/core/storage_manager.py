@@ -189,7 +189,7 @@ class StorageManager:
         return(self.scan_directory / self.get_next_filename())
     
     def find_image_path(self, filename: str):
-        self.require_scan()
+        #self.require_scan()
         self.logger.info(f"Searching for image: {filename}")
 
 
