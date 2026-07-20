@@ -19,7 +19,10 @@ from communication.protocol import (
     DOWNLOAD_IMAGE,
     DELETE_IMAGE,
     LIST_IMAGES,
-    DELETE_SCAN
+    DELETE_SCAN,
+    START_SCAN,
+    STOP_SCAN,
+    GET_SCAN
 )
 
 from .response import Response
@@ -81,6 +84,15 @@ class CommandParser:
         
         elif command.command == DELETE_SCAN:
             return self._handle_delete_scan(command)
+        
+        elif command.command == START_SCAN:
+            return self._handle_start_scan()
+        
+        elif command.command == STOP_SCAN:
+            return self._handle_stop_scan()
+        
+        elif command.command == GET_SCAN:
+            return self._handle_get_scan()
 
             
 
@@ -214,6 +226,7 @@ class CommandParser:
             }
         )
     
+    
     def _handle_delete_scan(self, command):
 
         scan = command.parameters["scan"]
@@ -231,4 +244,47 @@ class CommandParser:
             version=PROTOCOL_VERSION,
             status=STATUS_ERROR,
             message="Scan not found."
+        )
+    
+    def _handle_start_scan(self):
+
+        scan = self.application.start_scan()
+        """
+        return Response(
+            version=PROTOCOL_VERSION,
+            status=STATUS_OK,
+            message="Scan started.",
+            
+            data={
+                "scan": scan.folder_name
+            }
+        )
+        """
+        return Response(
+            version=PROTOCOL_VERSION,
+            status=STATUS_OK,
+            message="Scan started.",
+            data=scan
+        )
+    
+    def _handle_stop_scan(self):
+
+        scan = self.application.stop_scan()
+
+        return Response(
+            version=PROTOCOL_VERSION,
+            status=STATUS_OK,
+            message="Scan stopped.",
+            data=scan
+        )
+    
+    def _handle_get_scan(self):
+
+        scan = self.application.get_scan()
+
+        return Response(
+            version=PROTOCOL_VERSION,
+            status=STATUS_OK,
+            message="Current scan.",
+            data=scan
         )

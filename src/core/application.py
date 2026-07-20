@@ -31,7 +31,7 @@ class Application:
         self.logger = LoggerManager()
         self.configuration = Configuration()
         #self.storage = StorageManager()
-        self.scan = Scan()
+        #self.scan = Scan()
         self.storage = StorageManager(self.scan)
         self.camera = CameraController()
  #       self.serial_manager = SerialManager()
@@ -205,8 +205,14 @@ class Application:
     def delete_scan(self, scan: str):
         return self.storage.delete_scan(scan)
 
+    def start_scan(self):
+        return self.storage.start_scan()
 
+    def stop_scan(self):
+        return self.storage.stop_scan()
 
+    def get_scan(self):
+        return self.storage.get_scan()
 
     def communication_loop(self):
 
