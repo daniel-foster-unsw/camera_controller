@@ -7,4 +7,4 @@ class ScanInfo:
     def __init__(self, scan):
 
         self.name = scan.folder_name
-        self.image_count = scan.image_count
+        #self.image_count = scan.image_count

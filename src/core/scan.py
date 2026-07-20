@@ -14,6 +14,7 @@ class Scan:
         self.camera_id = CAMERA_ID
         self.start_time = datetime.now()
         self.image_number = 0
+        
 
     @property
     def timestamp(self):

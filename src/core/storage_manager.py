@@ -87,10 +87,11 @@ class StorageManager:
         self.logger.info(
             f"Started scan: {self.scan.folder_name}"
         )
-
+        """
         self.logger.info(
             f"Started scan: {self.scan.folder_name}"
         )
+        """
 
         return ScanInfo(self.scan)
 
