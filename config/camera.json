@@ -51,7 +51,7 @@
 
     "ui":
     {
-        "mode":"menu"
+        "mode":"headerless"
     }
     
 }
