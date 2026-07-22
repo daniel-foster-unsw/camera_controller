@@ -33,7 +33,7 @@
     
     "communication":
     {
-        "mode": "network",
+        "mode": "menu",
         
 
         "network":
