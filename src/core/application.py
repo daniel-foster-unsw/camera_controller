@@ -178,7 +178,7 @@ class Application:
             "log_file": str(self.logger.get_log_file()),
         }
            
-    def show_log_location(self):
+    def get_log_location(self):
         return self.logger.get_log_file()
     
     
@@ -214,6 +214,12 @@ class Application:
 
     def get_scan(self):
         return self.storage.get_scan()
+
+
+
+
+
+
 
     def communication_loop(self):
 
