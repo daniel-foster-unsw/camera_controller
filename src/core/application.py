@@ -168,12 +168,19 @@ class Application:
     def run_camera_self_test(self):
         return self.camera.self_test()
     def get_system_header(self):
-            return {
+
+        images_taken = 0
+
+        if self.storage.scan is not None:
+            images_taken = self.storage.scan.image_number
+            
+            
+        return {
             "camera_state": self.camera.get_status().state.name,
             "camera_driver": self.configuration.get("camera", "driver"),
             "camera_id": self.camera.get_information().camera_id,
             "storage": str(self.storage.image_directory),
-            "images_taken": self.scan.image_number,
+            "images_taken": images_taken,
             "log_level": self.configuration.get("logging", "level"),
             "log_file": str(self.logger.get_log_file()),
         }
