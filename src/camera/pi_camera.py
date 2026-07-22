@@ -218,7 +218,7 @@ class PiCamera(CameraInterface):
             self.initialise(self.configuration,self.logger)
             self.state = CameraState.READY
 
-        except Exception:
+        except Exception as e:
             self.logger.error(f"Camera recovery failed: {e}")
             self.state = CameraState.ERROR
             pass

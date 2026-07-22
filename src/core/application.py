@@ -138,7 +138,7 @@ class Application:
 
         try:
             if self.camera:
-                self.camera.shutdown()
+                self.camera.stop()
         except Exception as ex:
             self.logger.error(f"Error shutting down camera: {ex}")
 
