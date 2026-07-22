@@ -72,19 +72,20 @@ class ConsoleMenu:
         print("----------------------------------------------")
         print("\n5. Storage Information")
         print("6. List Scans")
-        print("7. Delete Image")
-        print("8. Delete Scan")
+        print("7. Finish Current Scan")
+        print("8. Delete Image")
+        print("9. Delete Scan")
 
         print("\n")
         print("\n System")
         print("----------------------------------------------")
-        print("\n9. Configuration")
-        print("10. System Status")
-        print("11. View Log File")
+        print("\n10. Configuration")
+        print("11. System Status")
+        print("12. View Log File")
 
         print("\n")
         print("----------------------------------------------")
-        print("12. Clear Screen")
+        print("13. Clear Screen")
         print("0. Exit")
 
         print("==============================================")
@@ -98,7 +99,7 @@ class ConsoleMenu:
         return input("\nSelect Option > ").strip()
         
 
-        #Run Menu
+    #Run Menu
     def run(self):
 
         while True:
@@ -111,6 +112,8 @@ class ConsoleMenu:
             choice = self.get_selection()
 
             if choice == "1":#capture image
+                if self.application.storage.scan is None:
+                    self.application.start_scan()
                 info = self.application.capture_image()
                 print(info)
                 self.pause()
@@ -141,20 +144,30 @@ class ConsoleMenu:
                 self.list_scans()
                 self.pause()
 
-            elif choice == "7":#delete image
+            elif choice == "7":# Finish Current Scan
+
+                try:
+                    info = self.application.stop_scan()
+                    print(info)
+                except Exception as ex:
+                    print(f"\n{ex}")
+
+                self.pause()
+
+            elif choice == "8":#delete image
                 self.delete_image()
                 self.pause()
          
-            elif choice == "8":#delete scan
+            elif choice == "9":#delete scan
                 self.delete_scan()
                 self.pause()
 
-            elif choice == "9":#Display Configuration
+            elif choice == "10":#Display Configuration
                 info = self.application.get_configuration()
                 print(info)
                 self.pause()
 
-            elif choice == "10":#Disply system status
+            elif choice == "11":#Disply system status
                 #info = self.application.show_system_status()
                 #print(info)
                 
@@ -178,12 +191,12 @@ class ConsoleMenu:
 
                 self.pause()
                 
-            elif choice == "11":#View log location
+            elif choice == "12":#View log location
                 info = self.application.get_log_location()
                 print(info)
                 self.pause()
 
-            elif choice == "12":#clear screen
+            elif choice == "13":#clear screen
                 self.clear()
                 self.pause()
 
