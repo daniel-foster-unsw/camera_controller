@@ -11,12 +11,12 @@ def main():
     try:
         app.startup()
 
-        mode = app.configuration.get(
-            "communication",
+        ui_mode = app.configuration.get(
+            "ui",
             "mode"
         )
 
-        if mode == "menu":
+        if ui_mode == "menu":
 
             menu = ConsoleMenu(app)
             menu.run()
