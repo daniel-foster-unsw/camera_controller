@@ -10,7 +10,7 @@ from camera.camera_state import CameraState
 
 @dataclass
 class CameraStatus:
-
+    """Stores the current operating status of a camera."""
     state: CameraState
 
     ready: bool
@@ -25,6 +25,7 @@ class CameraStatus:
 
 
     def to_dict(self):
+        """Convert the camera status to a dictionary."""
         return {
             "state": self.state.name,
             "ready": self.ready,

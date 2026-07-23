@@ -3,18 +3,17 @@ mock_camera.py
 
 Simulated camera for Windows development.
 """
-#from email.mime import image
-#from fileinput import filename
+
 from datetime import datetime
-from email.mime import image
-from fileinput import filename
+
+
 from pathlib import Path
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 from camera.camera_exceptions import CameraConfigurationError, CameraNotReadyError
-from core.configuration import Configuration
-from datetime import datetime
+
+
 from models.capture_result import CaptureResult
 from models.camera_information import CameraInformation
 from models.camera_status import CameraStatus
@@ -33,7 +32,7 @@ class MockCamera(CameraInterface):
         Initialise the mock camera.
         """
         self.logger = None
-#        self.ready = False
+
         self.configuration = configuration
         self.camera_id = configuration.get("camera", "id")
         self.width = configuration.get("camera", "width")
@@ -41,20 +40,11 @@ class MockCamera(CameraInterface):
         self.image_format = configuration.get("camera", "format")
         self.state = CameraState.UNINITIALISED
 
-
-
-
-
-
-
     def initialise(self,configuration, logger) -> None:
         """
         Initialise the mock camera.
         """
-#        print(self.camera_id)
-#        print(self.width)
-#        print(self.height)
-#        print(self.image_format)
+
         self.logger = logger
         self.state = CameraState.INITIALISING
 
@@ -77,19 +67,13 @@ class MockCamera(CameraInterface):
                 "Camera ID not configured."
             )
 
-
-
-
-
-
         # Read configuration
         # Prepare camera
-#        self.ready = True
+
         self.state = CameraState.READY
-        #print("✓ Mock Camera Ready")
+
         self.logger.info("Mock camera initialised.")
         
-
     def capture_image(self, filename: Path):
         """
         Simulate capturing an image and saving it to the specified path.
@@ -104,7 +88,7 @@ class MockCamera(CameraInterface):
             )
         
         self.state = CameraState.CAPTURING
-        #print(f"capturing image -> {filename}")
+
         self.logger.info(f"Capturing image: {filename.name}")
         image = Image.new(
         "RGB",
@@ -165,7 +149,7 @@ class MockCamera(CameraInterface):
             image.save(filename)
             filesize = filename.stat().st_size
             self.state = CameraState.READY
-#            print("Save succeeded")
+
             self.logger.info(f"Image saved: {filename}")
 
         except PermissionError as e:
@@ -179,8 +163,7 @@ class MockCamera(CameraInterface):
             self.state = CameraState.ERROR
             self.logger.error(f"Image write failed: {e}")
             raise StorageWriteError("Failed to write image to storage.") from e
-#        print(f"✓ Image saved -> {filename}")
-#        self.logger.info(f"Image saved: {filename}")
+
     
         return CaptureResult(
 
@@ -204,24 +187,11 @@ class MockCamera(CameraInterface):
         )
 
 
-
-
-
-
-
-
-
-
-
-
-
     def stop(self):
-        """
-        Stop the mock camera.
-        """
-#        self.ready = False
+        """Stop the mock camera."""
+
         self.state = CameraState.SHUTDOWN
-#        print("Camera stopped")
+
         self.logger.info("Mock camera stopped.")
 
     def is_ready(self):
@@ -234,11 +204,11 @@ class MockCamera(CameraInterface):
         return self.state == CameraState.READY
     
     def get_state(self):
-
+        """Return the current camera state."""
         return self.state
     
     def get_information(self):
-
+        """Return information about the mock camera."""
         return CameraInformation(
 
             camera_id=self.camera_id,
@@ -257,9 +227,8 @@ class MockCamera(CameraInterface):
             )
         )
     
-
     def get_status(self):
-
+            """Return the current camera status."""
             return CameraStatus(
 
             state=self.state,
@@ -277,7 +246,7 @@ class MockCamera(CameraInterface):
         )
     
     def self_test(self):
-
+        """Run a self-test on the mock camera."""
         tests = []
 
         tests.append(self.width > 0)
@@ -290,13 +259,12 @@ class MockCamera(CameraInterface):
 
         return all(tests)
     
-
     def recover(self):
-
+        """Attempt to recover the mock camera from an error state."""
         self.logger.warning(
             "Attempting camera recovery."
         )
 
         self.state = CameraState.INITIALISING
 
-        self.initialise(self.logger)
+        self.initialise(self.configuration,self.logger)

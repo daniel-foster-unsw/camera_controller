@@ -9,12 +9,9 @@ from pathlib import Path
 
 class CameraInterface(ABC):
     @abstractmethod
-    def initialise(self) ->None:
-        """
-        Initialise the camera.
-        """
+    def initialise(self) -> None:
+        """Initialise the camera."""
         pass
-
 
     @abstractmethod
     def capture_image(self, image_path: Path) -> None:
@@ -28,9 +25,7 @@ class CameraInterface(ABC):
 
     @abstractmethod
     def stop(self) -> None:
-        """
-        Stop the camera and release any resources.
-        """
+        """Stop the camera and release any resources."""
         pass
 
     @abstractmethod
@@ -43,19 +38,28 @@ class CameraInterface(ABC):
         """
         pass
 
+    @abstractmethod
     def self_test(self):
+        """Run the camera self-test."""
         pass
 
 
     @abstractmethod
     def get_information(self):
+        """Return information about the camera."""
         pass
+
     @abstractmethod
     def get_status(self):
+        """Return the current camera status."""
         pass
+
     @abstractmethod
     def get_state(self):
+        """Return the current camera state."""
         pass
+
     @abstractmethod
     def recover(self):
+        """Attempt to recover the camera from an error state."""
         pass

@@ -6,6 +6,7 @@ Represents a command received over USB.
 
 from dataclasses import dataclass
 import json
+
 @dataclass
 class Command:
 
@@ -15,6 +16,7 @@ class Command:
 
     @classmethod
     def from_json(cls, json_string):
+        """Create a Command instance from a JSON string."""
 
         data = json.loads(json_string)
 

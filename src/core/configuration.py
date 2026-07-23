@@ -14,10 +14,11 @@ class Configuration:
     Manages the configuration settings for the Camera Controller application.
     """
     def __init__(self):
+        """Initialise the configuration manager."""
         self.loaded = False
         self.settings = {}
         self.project_root = Path(__file__).resolve().parents[2]
-#        self.config_file = (Path(__file__).parent.parent / "config"/"camera.json")
+
 
         self.config_file = (
         self.project_root
@@ -47,11 +48,10 @@ class Configuration:
         
         return self.settings
     
-
     def reload(self):
+        """Reload the configuration from disk."""
         self.load()
         
-
     def get(self, *keys):
         """
         Retrieves a configuration value using a sequence of keys.
@@ -73,7 +73,6 @@ class Configuration:
 
         return value
     
-    
-
     def __str__(self):
+        """Return a string representation of the configuration."""
         return f"Configuration({self.config_file})"

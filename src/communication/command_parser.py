@@ -3,9 +3,9 @@ command_parser.py
 
 Parses commands received over USB.
 """
-from core.storage_manager import StorageManager
 
-from communication.json_protocol import JsonProtocol
+
+
 from communication.protocol import (
     PROTOCOL_VERSION,
     PING,
@@ -28,8 +28,6 @@ from communication.protocol import (
 )
 
 from .response import Response
-
-from core.storage_manager import StorageManager
 from core.storage_exceptions import StorageError
 
 class CommandParser:
@@ -40,6 +38,9 @@ class CommandParser:
         self.logger = logger
 
     def execute(self, command):
+        """
+        Execute a protocol command.
+        """
 
         if command.version != PROTOCOL_VERSION:
             return Response(
@@ -77,9 +78,7 @@ class CommandParser:
         
         elif command.command == DOWNLOAD_IMAGE:
             return self._handle_download_image(command)
-#            filename = command.parameters["filename"]
-#            image = self.application.download_image(filename)
-#            return image
+
 
         elif command.command == DELETE_IMAGE:
             return self._handle_delete_image(command)
@@ -115,7 +114,9 @@ class CommandParser:
         )
     
     def _handle_camera_status(self):
-
+        """
+        handle camera status command
+        """
         status = self.application.get_camera_status()
 
         return Response(
@@ -126,7 +127,9 @@ class CommandParser:
         )
     
     def _handle_camera_information(self):
-
+        """
+        handle camera information command
+        """
         information = self.application.get_camera_information()
 
         return Response(
@@ -137,7 +140,9 @@ class CommandParser:
         )
     
     def _handle_storage_information(self):
-
+        """
+        handle storage information command
+        """
         storage = self.application.get_storage_information()
 
         return Response(
@@ -148,7 +153,9 @@ class CommandParser:
         )
     
     def _handle_configuration(self):
-
+        """
+        handle configuration command
+        """
         configuration = self.application.get_configuration()
 
         return Response(
@@ -159,6 +166,9 @@ class CommandParser:
         )
     
     def _handle_self_test(self):
+        """
+        handle self test command command
+        """
 
         result = self.application.run_camera_self_test()
 
@@ -171,7 +181,9 @@ class CommandParser:
     
 
     def _handle_capture_image(self):
-
+        """
+        handle capture image command
+        """
 
         self.application.storage.require_scan()
         
@@ -185,7 +197,6 @@ class CommandParser:
             data={
                 "filename": str(result.filename),
                 "filesize": result.filesize,
-#                "filesize": str(result.filesize),
                 "width": result.width,
                 "height": result.height,
                 "format":result.image_format
@@ -193,8 +204,11 @@ class CommandParser:
         )
     
     def _handle_download_image(self, command):
+        """
+        handle download image command command
+        """
         try:
-            #self.application.storage.require_scan()
+
 
             filename = command.parameters["filename"]
             image = self.application.download_image(filename)
@@ -205,8 +219,9 @@ class CommandParser:
         
 
     def _handle_delete_image(self, command):
-
-        #self.application.storage.require_scan()
+        """
+        handle delete image command command
+        """
 
         filename = command.parameters["filename"]
 
@@ -227,21 +242,11 @@ class CommandParser:
         )
     
     def _handle_list_images(self, command):
-
-        #self.application.storage.require_scan()
-
+        """
+        handle list images command
+        """
         scans = self.application.list_images()
 
-        """
-        return Response(
-            version=PROTOCOL_VERSION,
-            status=STATUS_OK,
-            message="Images found.",
-            data={
-                "name": scans
-            }
-        )
-        """
         return Response(
             version=PROTOCOL_VERSION,
             status=STATUS_OK,
@@ -272,19 +277,11 @@ class CommandParser:
         )
     
     def _handle_start_scan(self):
-
+        """
+        handle start scan command
+        """
         scan = self.application.start_scan()
-        """
-        return Response(
-            version=PROTOCOL_VERSION,
-            status=STATUS_OK,
-            message="Scan started.",
-            
-            data={
-                "scan": scan.folder_name
-            }
-        )
-        """
+        
         return Response(
             version=PROTOCOL_VERSION,
             status=STATUS_OK,
@@ -293,11 +290,13 @@ class CommandParser:
         )
     
     def _handle_stop_scan(self):
-
+        """
+        handle stop scan command
+        """
         try:
 
             scan = self.application.stop_scan()
-            #self.require_scan()
+
             return Response(
                 version=PROTOCOL_VERSION,
                 status=STATUS_OK,
@@ -313,7 +312,9 @@ class CommandParser:
 
     
     def _handle_get_scan(self):
-
+        """
+        handle handle get scan id command
+        """
         scan = self.application.get_scan()
 
         if scan is None:

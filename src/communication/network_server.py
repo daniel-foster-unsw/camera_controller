@@ -11,7 +11,9 @@ from communication.communication_interface import CommunicationInterface
 class NetworkServer(CommunicationInterface):
 
     def __init__(self, host="0.0.0.0", port=5000):
-
+        """
+        Initialise the TCP network server.
+        """
         self.host = host
         self.port = port
 
@@ -20,6 +22,9 @@ class NetworkServer(CommunicationInterface):
         self.address = None
 
     def initialise(self, configuration=None, logger=None):
+        """
+        Create and configure the TCP server socket.
+        """
         self.configuration = configuration
         self.logger = logger
 
@@ -49,6 +54,10 @@ class NetworkServer(CommunicationInterface):
 
     def wait_for_client(self):
 
+        """
+        Wait for a client connection.
+        """
+
         self.connection, self.address = self.server.accept()
 
         self.reader = self.connection.makefile(
@@ -67,18 +76,12 @@ class NetworkServer(CommunicationInterface):
         
     def stop(self):
 
+        """
+        Stop the server and close all active connections.
+        """
+
         self.close_client()
-        """
-        if hasattr(self, "reader"):
-            self.reader.close()
-
-        if hasattr(self, "writer"):
-            self.writer.close()
-
-        if self.connection:
-            self.connection.close()
-            self.connection = None
-        """
+       
         if self.server:
             try:
                 self.server.shutdown(socket.SHUT_RDWR)
@@ -93,11 +96,15 @@ class NetworkServer(CommunicationInterface):
 
 
     def receive(self):
-
+        """
+        eceive a JSON message from the connected client.
+        """
         return self.reader.readline().strip()
     
     def send(self, message):
-               
+        """
+        Send a JSON message to the connected client.
+        """
 
         self.writer.write(message + "\n")
 
@@ -113,6 +120,9 @@ class NetworkServer(CommunicationInterface):
 
 
     def close_client(self):
+        """
+        Close the active client connection.
+        """
         
         if hasattr(self, "reader") and self.reader:
             try:
@@ -140,14 +150,12 @@ class NetworkServer(CommunicationInterface):
         self.address = None
 
     def close(self):
+        """
+        Close the server socket.
+        """
         
         self.close_client()
-        """
-        if hasattr(self, "server") and self.server:
-            self.server.close()
-            self.server = None
 
-        """
         if self.server:
             try:
                 self.server.shutdown(socket.SHUT_RDWR)

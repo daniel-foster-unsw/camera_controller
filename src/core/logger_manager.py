@@ -4,7 +4,7 @@ logger_manager.py
 Creates and manages the application logger.
 """
 
-from email.mime import message
+
 import logging
 from pathlib import Path
 
@@ -12,15 +12,15 @@ from pathlib import Path
 class LoggerManager:
 
    def __init__(self):
+      """Initialise the logger manager."""
+      self.configuration = None
 
-        self.configuration = None
+      self.logger = None
 
-        self.logger = None
-
-        self.log_file = None
+      self.log_file = None
 
    def initialise(self, configuration):
-      
+      """Log an informational message."""
       self.configuration = configuration
       
 
@@ -65,27 +65,27 @@ class LoggerManager:
 
       self.logger.addHandler(file_handler)
       
-      #Conveinence method to log messages
+   #Conveinence method to log messages
    def info(self, message):
-
+      """Log an informational message."""
       self.logger.info(message)
 
 
    def warning(self, message):
-
+      """Log a warning message."""
       self.logger.warning(message)
 
 
    def error(self, message):
-
+      """Log an error message."""
       self.logger.error(message)
 
 
    def debug(self, message):
-
+      """Log a debug message."""
       self.logger.debug(message)
 
 
    def get_log_file(self):
-
+      """Return the current log file path."""
       return self.log_file

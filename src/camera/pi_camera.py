@@ -9,10 +9,9 @@ from pathlib import Path
 from camera.camera_interface import CameraInterface
 from datetime import datetime
 
-from camera.camera_exceptions import CameraNotReadyError, CameraCaptureError, CameraComponentNotImplementedError
+from camera.camera_exceptions import CameraNotReadyError, CameraCaptureError
 from camera.camera_state import CameraState
 
-from core.logger_manager import logging
 
 from models.camera_information import CameraInformation
 from models.camera_status import CameraStatus
@@ -25,7 +24,7 @@ from time import sleep
 class PiCamera(CameraInterface):
 
     def __init__(self, configuration):
-
+        """Initialise the Raspberry Pi camera driver."""
         self.configuration = configuration
         self.logger = None
         self.camera = None
@@ -38,6 +37,7 @@ class PiCamera(CameraInterface):
         self.state = CameraState.UNINITIALISED
 
     def initialise(self, configuration, logger):
+        """Initialise the Raspberry Pi camera hardware."""
         from picamera2 import Picamera2
 
         try:
@@ -71,9 +71,8 @@ class PiCamera(CameraInterface):
             )
             raise
 
-
     def capture_image(self, filename):
-
+        """Capture an image using the Raspberry Pi camera."""
         if self.state != CameraState.READY:
             raise CameraNotReadyError("Camera is not Ready")
             
@@ -108,20 +107,14 @@ class PiCamera(CameraInterface):
             self.logger.error(f"Capture failed: {e}")
             raise CameraCaptureError(str(e))
             
-
     def stop(self):
-        """
-        Stop Pi Camera.
-        """
+        """Stop Pi Camera."""
         if self.camera is not None:
             self.camera.stop()
             self.camera.close()
             self.camera = None
         self.state = CameraState.SHUTDOWN
         self.logger.info("Pi Camera stopped.")
-#        raise CameraComponentNotImplementedError("code component Stop() in pi_camera not implemented")
-
-
 
     def is_ready(self):
         """
@@ -130,18 +123,15 @@ class PiCamera(CameraInterface):
         Returns:
             bool: Always returns True for the mock camera.
         """
-#        self.logger.error("code component is_ready() in pi_camera not implemented")
-#        raise CameraComponentNotImplementedError("code component is_ready() in pi_camera not implemented")
         return self.state == CameraState.READY
     
     def get_state(self):
- #       self.logger.error("code component get_state() in pi_camera not implemented")
-#      raise CameraComponentNotImplementedError("code component get_state() in pi_camera not implemented")
+        """Return the current camera state."""
 
         return self.state
     
     def get_information(self):
-
+        """Return information about the Raspberry Pi camera."""
         return CameraInformation(
 
             camera_id=self.camera_id,
@@ -160,11 +150,8 @@ class PiCamera(CameraInterface):
             )
         )
     
-
     def get_status(self):
-            
-#        self.logger.error("code component get_status() in pi_camera not implemented")
-#        raise CameraComponentNotImplementedError("code component get_status() in pi_camera not implemented")
+        """Return the current camera status."""
 
         return CameraStatus(
 
@@ -183,7 +170,7 @@ class PiCamera(CameraInterface):
         )
     
     def self_test(self):
-
+        """Run a self-test on the Raspberry Pi camera."""
         tests = []
         tests.append(self.camera is not None)
 
@@ -199,14 +186,10 @@ class PiCamera(CameraInterface):
 
         return all(tests)
     
-
     def recover(self):
+        """Attempt to recover the Raspberry Pi camera."""
+        self.logger.warning("Attempting camera recovery.")
 
-        self.logger.warning(
-            "Attempting camera recovery."
-        )
-#        self.logger.error("code component recover() in pi_camera not implemented")
-#        raise CameraComponentNotImplementedError("code component recover() in pi_camera not implemented")
         try:
             self.stop()
             self.camera.close()

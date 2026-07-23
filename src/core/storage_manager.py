@@ -5,7 +5,6 @@ Handles image storage and file management.
 """
 
 from pathlib import Path
-from datetime import datetime
 from core.constants import (IMAGE_FOLDER, CAMERA_ID, IMAGE_EXTENSION)
 import shutil
 from core.scan import Scan
@@ -30,29 +29,9 @@ class StorageManager:
         
         self.image_directory = None
         
-    """
-    def __init__(self, scan):
-        self.scan = scan
-
-        self.logger = None
-        self.project_root = Path(__file__).resolve().parents[1]
-        storage_directory = None
-        self.image_directory = None
-#        self.image_directory =( self.project_root / IMAGE_FOLDER)
-        # Image number within this scan
-        #self.image_number = 0
-
-        # Timestamp created once when scan starts
-        #self.scan_timestamp = datetime.now().strftime("%Y%m%d_%H%M")
-        # Scan folder name
-        
-
-        #self.scan.folder_name = (f"{self.scan.timestamp}_{CAMERA_ID}")
-        # Fuull path to this scan
-        #self.scan_directory = (self.image_directory / self.scan_folder_name)
-        self.scan_directory = None
-    """
+   
     def initialise(self,configuration, logger):
+        """Initialise the image storage directory."""
         try:
             self.logger = logger
             storage_directory = configuration.get("storage", "directory")
@@ -71,7 +50,7 @@ class StorageManager:
 
 #scan functionality
     def start_scan(self):
-
+        """Create a new scan directory."""
         self.scan = Scan()
 
         self.scan_directory = (
@@ -87,17 +66,11 @@ class StorageManager:
         self.logger.info(
             f"Started scan: {self.scan.folder_name}"
         )
-        """
-        self.logger.info(
-            f"Started scan: {self.scan.folder_name}"
-        )
-        """
 
-        #return ScanInfo(self.scan)
         return ScanInfo(scan = self.scan.folder_name)
 
     def stop_scan(self):
-
+        """Stop the active scan."""
         self.require_scan()
 
         #scan = ScanInfo(self.scan)
@@ -113,7 +86,7 @@ class StorageManager:
         return scan
     
     def get_scan(self):
-
+        """Return information about the active scan"""
         if self.scan is None:
             return None
 
@@ -121,13 +94,13 @@ class StorageManager:
         return ScanInfo(scan = self.scan.folder_name)
     
     def require_scan(self):
-
+        """Raise an exception if no scan is active."""
         if self.scan is None:
             raise StorageError("No active scan.")
         
-    #def delete_scan(self, scan: str) -> bool:
+  
     def delete_scan(self, scan_name) -> bool:
-
+        """Delete a scan directory."""
         #scan_directory = self.image_directory / scan
         scan_directory = (self.image_directory / scan_name)
 
@@ -147,6 +120,7 @@ class StorageManager:
    
 
     def check_storage(self):
+        """Return storage usage information."""
         try:
             usage = shutil.disk_usage(self.project_root)
             
@@ -163,14 +137,15 @@ class StorageManager:
 
 
     def image_count(self):
+        """Return the number of images in the active scan."""
         self.require_scan()
         return len(list(self.image_directory.glob("*")))
     
     def get_next_filename(self):
-
+        """Generate the next image filename."""
         self.require_scan()
         try:
-            #self.image_number += 1
+
             image_number = self.scan.next_image_number()
             filename = (
                 f"{self.scan.timestamp}_"
@@ -185,11 +160,12 @@ class StorageManager:
             raise
     
     def get_image_path(self):
+        """Return the path for the next captured image."""
         self.require_scan()
         return(self.scan_directory / self.get_next_filename())
     
     def find_image_path(self, filename: str):
-        #self.require_scan()
+        """Locate an image by filename."""
         self.logger.info(f"Searching for image: {filename}")
 
 
@@ -268,18 +244,6 @@ class StorageManager:
                 self.logger.warning(f"Image not found: {filename}")
                 return False
 
-            """
-            if not image_path.exists():
-
-                self.logger.warning(
-                    f"Image not found: {filename}"
-                )
-            
-                return False
-            """
-
-
-            
             image_path.unlink()
 
             self.logger.info(f"Deleted image: {filename}")

@@ -8,7 +8,7 @@ import json
 
 @dataclass
 class Response:
-
+    """Convert the response into a JSON string."""
     version: str
     status: str
     message: str

@@ -9,6 +9,7 @@ from dataclasses import dataclass
 
 @dataclass
 class CameraInformation:
+    """Stores static information about a camera."""
 
     camera_id: str
 

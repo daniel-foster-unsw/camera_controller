@@ -11,7 +11,7 @@ from datetime import datetime
 
 @dataclass
 class CaptureResult:
-
+    """Stores the result of a camera capture operation."""
     success: bool
 
     filename: str
